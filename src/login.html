@@ -553,7 +553,7 @@ async function register() {
 
         try {
           const response = await fetch(
-            `http://10.35.2.200:5001/api/files/${fileId}`,
+            `/api/files/${fileId}`,
             {
               credentials: "include",
             }

@@ -1226,7 +1226,7 @@
       async function getChildren(nik, row) {
         try {
           const response = await fetch(
-            `http://10.35.2.200:5001/api/anak?nik=${nik}`
+            `/api/anak?nik=${nik}`
           );
           const text = await response.text();
           const data = JSON.parse(text);
@@ -1259,7 +1259,7 @@
 
         try {
           const response = await fetch(
-            `http://10.35.2.200:5001/api/karyawan?nik=${nik}`
+            `/api/karyawan?nik=${nik}`
           );
           const text = await response.text();
           const data = JSON.parse(text);
@@ -1409,7 +1409,7 @@
 
         try {
           const response = await fetch(
-            "http://10.35.2.200:5001/api/scholarship",
+            "/api/scholarship",
             {
               method: "POST",
               headers: {

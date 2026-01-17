@@ -1056,7 +1056,7 @@ document.addEventListener('input', function(e) {
       async function getChildren(nik, row) {
         try {
           const response = await fetch(
-            `http://10.35.2.200:5001/api/anaknilai?nik=${nik}`
+            `/api/anaknilai?nik=${nik}`
           );
           const text = await response.text();
           const data = JSON.parse(text);
@@ -1089,7 +1089,7 @@ document.addEventListener('input', function(e) {
 
         try {
           const response = await fetch(
-            `http://10.35.2.200:5001/api/karyawannilai?nik=${nik}`
+            `/api/karyawannilai?nik=${nik}`
           );
           const text = await response.text();
           const data = JSON.parse(text);
@@ -1222,7 +1222,7 @@ document.addEventListener('input', function(e) {
             didOpen: () => Swal.showLoading()
         });
 
-        const apiUrl = "http://10.35.2.200:5001/api/update-academic-scores";
+        const apiUrl = "/api/update-academic-scores";
         const payload = {
             updates: academicData,
             update_type: "academic_only"
