@@ -45,17 +45,20 @@ app.use(
   })
 );
 
-// Konfigurasi database MySQL (Laragon default)
-const dbConfig = {
-  host: process.env.DB_HOST || "localhost",
-  database: process.env.DB_NAME || "beasiswa",
-  user: process.env.DB_USER || "root",
-  password: process.env.DB_PASSWORD || "",
-  port: parseInt(process.env.DB_PORT, 10) || 3306,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-};
+// Konfigurasi database MySQL
+// Support both MYSQL_URL (Railway) or individual params (local)
+const dbConfig = process.env.MYSQL_URL
+  ? { uri: process.env.MYSQL_URL }
+  : {
+    host: process.env.DB_HOST || "localhost",
+    database: process.env.DB_NAME || "beasiswa",
+    user: process.env.DB_USER || "root",
+    password: process.env.DB_PASSWORD || "",
+    port: parseInt(process.env.DB_PORT, 10) || 3306,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0,
+  };
 
 // Inisialisasi pool koneksi
 let pool;
@@ -63,11 +66,19 @@ let pool;
 async function initializeDB() {
   try {
     console.log("Connecting to MySQL database...");
-    pool = mysql.createPool(dbConfig);
+
+    // Use connection URL if available (Railway), otherwise use config object
+    if (process.env.MYSQL_URL) {
+      console.log("Using MYSQL_URL connection string");
+      pool = mysql.createPool(process.env.MYSQL_URL);
+    } else {
+      console.log("Using individual database parameters");
+      pool = mysql.createPool(dbConfig);
+    }
 
     // Test connection
     const connection = await pool.getConnection();
-    console.log("✅ MySQL Database connected:", dbConfig.host);
+    console.log("✅ MySQL Database connected!");
     connection.release();
 
     // Auto-create tables
