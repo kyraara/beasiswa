@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manajemen User - Sistem Beasiswa</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      .sidebar {
+        min-height: 100vh;
+        background-color: #343a40;
+      }
+      .sidebar .nav-link {
+        color: rgba(255, 255, 255, 0.75);
+      }
+      .sidebar .nav-link:hover,
+      .sidebar .nav-link.active {
+        color: white;
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+      .main-content {
+        padding: 20px;
+      }
+      .card {
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .table th {
+        background-color: #f1f1f1;
+        font-weight: 600;
+      }
+      .badge-admin {
+        background-color: #dc3545;
+      }
+      .badge-user {
+        background-color: #28a745;
+      }
+      .status-active {
+        color: #28a745;
+      }
+      .status-inactive {
+        color: #dc3545;
+      }
+      a {
+        text-decoration: none;
+        color: white;
+      }
+
+      .nav:hover {
+        cursor: pointer;
+      }
+
+      .company {
+        font-size: 11px;
+        padding: 10px;
+        margin-top: 350px;
+      }
+
+      /* Sidebar Styles */
+      .sidebar {
+        width: 150px;
+        background-color: #212529;
+        color: white;
+        height: 100vh;
+        position: fixed;
+        padding-top: 20px;
+        transition: all 0.3s;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      .sidebar-header {
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .sidebar-header img {
+        width: 70px;
+        margin-right: 5px;
+      }
+
+      .sidebar-header h5 {
+        font-size: 1rem;
+        font-weight: bold;
+        margin: 0;
+      }
+
+      .sidebar-menu {
+        list-style: none;
+        padding: 0;
+      }
+
+      .sidebar-menu li {
+        padding: 5px 10px;
+        font-size: 13px;
+        border-left: 3px solid transparent;
+        transition: all 0.3s;
+      }
+
+      .sidebar-menu li:hover {
+        background-color: #343a40;
+        border-left: 3px solid #007bff;
+      }
+
+      .sidebar-menu li a {
+        color: white;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+      }
+
+      .sidebar-menu li a i {
+        margin-right: 10px;
+        font-size: 1rem;
+      }
+
+      .sidebar-menu li.active {
+        background-color: #343a40;
+        border-left: 3px solid #007bff;
+      }
+
+      .main-content {
+        margin-right: 40px;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Sidebar -->
+        <div class="sidebar">
+          <div class="sidebar-header">
+    
+            <h5>- BEASISWA</h5>
+          </div>
+          <ul class="sidebar-menu">
+            <li class="nav-item">
+              <a class="" href="/input">
+                <i class="bi bi-pencil-square"></i>
+                <span>Form Input</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="" href="/beasiswa">
+                <i class="bi bi-people me-2"></i>Beasiswa
+              </a>
+            </li>
+            <li class="nav-item active">
+              <a class="" href="#">
+                <i class="bi bi-person-lines-fill me-2"></i>Manajemen User
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="" href="/parameternilai">
+                <i class="bi bi-sliders me-2"></i>Parameter Nilai
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="" href="/files">
+                <i class="bi bi-file-earmark-text"></i>Files
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="" href="/import">
+                <i class="bi bi-database-up"></i>Import
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="text-danger" href="#" id="logoutBtn">
+                <i class="bi bi-box-arrow-right me-2"></i>Logout
+              </a>
+            </li>
+          </ul>
+          <div class="company">
+         
+          </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+          <div
+            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+          >
+            <h1 class="h2">Manajemen User</h1>
+            <button
+              class="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#addUserModal"
+            >
+              <i class="bi bi-plus-circle me-1"></i>Tambah User
+            </button>
+          </div>
+
+          <!-- Search and Filter -->
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Cari user..."
+                  id="searchInput"
+                />
+                <button
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  id="searchBtn"
+                >
+                  <i class="bi bi-search"></i>
+                </button>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <select class="form-select" id="roleFilter">
+                <option value="">Semua Role</option>
+                <option value="admin">Admin</option>
+                <option value="user">User</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <select class="form-select" id="statusFilter">
+                <option value="">Semua Status</option>
+                <option value="1">Aktif</option>
+                <option value="0">Nonaktif</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Users Table -->
+          <div class="card">
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Username</th>
+                      <th>Nama Lengkap</th>
+                      <th>Role</th>
+                      <th>Status</th>
+                      <th>Tanggal Dibuat</th>
+                      <th>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="usersTableBody">
+                    <!-- Data akan diisi oleh JavaScript -->
+                  </tbody>
+                </table>
+              </div>
+              <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center" id="pagination">
+                  <!-- Pagination akan diisi oleh JavaScript -->
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <div
+      class="modal fade"
+      id="addUserModal"
+      tabindex="-1"
+      aria-labelledby="addUserModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addUserModalLabel">Tambah User Baru</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="addUserForm">
+              <div class="mb-3">
+                <label for="addUsername" class="form-label">Username</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="addUsername"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="addPassword" class="form-label">Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="addPassword"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="addFullName" class="form-label">Nama Lengkap</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="addFullName"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="addRole" class="form-label">Role</label>
+                <select class="form-select" id="addRole" required>
+                  <option value="user">User</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Batal
+            </button>
+            <button type="button" class="btn btn-primary" id="saveUserBtn">
+              Simpan
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div
+      class="modal fade"
+      id="editUserModal"
+      tabindex="-1"
+      aria-labelledby="editUserModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="editUserForm">
+              <input type="hidden" id="editUserId" />
+              <div class="mb-3">
+                <label for="editUsername" class="form-label">Username</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editUsername"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="editFullName" class="form-label"
+                  >Nama Lengkap</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editFullName"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="editRole" class="form-label">Role</label>
+                <select class="form-select" id="editRole" required>
+                  <option value="user">User</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <div class="form-check form-switch">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="editIsActive"
+                  />
+                  <label class="form-check-label" for="editIsActive"
+                    >Aktif</label
+                  >
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Batal
+            </button>
+            <button type="button" class="btn btn-primary" id="updateUserBtn">
+              Simpan Perubahan
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div
+      class="modal fade"
+      id="changePasswordModal"
+      tabindex="-1"
+      aria-labelledby="changePasswordModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="changePasswordModalLabel">
+              Ubah Password
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="changePasswordForm">
+              <input type="hidden" id="changePasswordUserId" />
+              <div class="mb-3" id="currentPasswordField">
+                <label for="currentPassword" class="form-label"
+                  >Password Saat Ini</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="currentPassword"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="newPassword" class="form-label"
+                  >Password Baru</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="newPassword"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="confirmPassword" class="form-label"
+                  >Konfirmasi Password Baru</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="confirmPassword"
+                  required
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Batal
+            </button>
+            <button type="button" class="btn btn-primary" id="savePasswordBtn">
+              Simpan Password
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div
+      class="modal fade"
+      id="confirmationModal"
+      tabindex="-1"
+      aria-labelledby="confirmationModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-warning">
+            <h5 class="modal-title" id="confirmationModalLabel">Konfirmasi</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body" id="confirmationMessage">
+            Apakah Anda yakin ingin menghapus user ini?
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Batal
+            </button>
+            <button type="button" class="btn btn-danger" id="confirmActionBtn">
+              Ya, Hapus
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      // Global variables
+      let currentUser = {};
+      let currentPage = 1;
+      const limit = 10;
+      let totalUsers = 0;
+      let currentUserId = null;
+
+      // Check authentication and load user data
+      document.addEventListener("DOMContentLoaded", async () => {
+        await checkAuth();
+        await fetchUsers();
+        setupEventListeners();
+      });
+
+      // Check authentication
+      async function checkAuth() {
+        try {
+          const response = await fetch("/api/check-auth", {
+            credentials: "include",
+          });
+          const data = await response.json();
+
+          if (!data.authenticated) {
+            window.location.href = "/login";
+            return;
+          }
+
+          currentUser = data.user;
+
+          // Hide admin features if not admin
+          if (currentUser.role !== "admin") {
+            document.querySelector('[href="/users"]').style.display = "none";
+          }
+
+          // Set up logout
+          document
+            .getElementById("logoutBtn")
+            .addEventListener("click", logout);
+        } catch (error) {
+          console.error("Auth check error:", error);
+          window.location.href = "/input"; //-"/Login"-//
+        }
+      }
+
+      // Logout function
+      async function logout() {
+        try {
+          const response = await fetch("/api/logout", {
+            method: "POST",
+            credentials: "include",
+          });
+          const data = await response.json();
+          if (data.success) {
+            window.location.href = "/login";
+          }
+        } catch (error) {
+          console.error("Logout error:", error);
+        }
+      }
+
+      // Fetch users with pagination
+      async function fetchUsers(page = 1, search = "", role = "", status = "") {
+        try {
+          currentPage = page;
+          const url = `/api/users?page=${page}&limit=${limit}&search=${encodeURIComponent(
+            search
+          )}&role=${role}&status=${status}`;
+
+          const response = await fetch(url, {
+            credentials: "include",
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to fetch users");
+          }
+
+          const data = await response.json();
+          totalUsers = data.total;
+          renderUsers(data.data);
+          renderPagination();
+        } catch (error) {
+          console.error("Error fetching users:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Gagal memuat data user",
+          });
+        }
+      }
+
+      // Render users to table
+      function renderUsers(users) {
+        const tbody = document.getElementById("usersTableBody");
+        tbody.innerHTML = "";
+
+        if (users.length === 0) {
+          tbody.innerHTML = `
+                  <tr>
+                      <td colspan="7" class="text-center">Tidak ada data user</td>
+                  </tr>
+              `;
+          return;
+        }
+
+        users.forEach((user, index) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+                  <td>${(currentPage - 1) * limit + index + 1}</td>
+                  <td>${user.username}</td>
+                  <td>${user.full_name}</td>
+                  <td>
+                      <span class="badge rounded-pill ${
+                        user.role === "admin" ? "bg-danger" : "bg-success"
+                      }">
+                          ${user.role}
+                      </span>
+                  </td>
+                  <td>
+                      <i class="bi ${
+                        user.is_active
+                          ? "bi-check-circle-fill text-success"
+                          : "bi-x-circle-fill text-danger"
+                      }"></i>
+                      ${user.is_active ? "Aktif" : "Nonaktif"}
+                  </td>
+                  <td>${new Date(user.created_at).toLocaleDateString()}</td>
+                  <td>
+                      <td>
+  <div class="btn-group btn-group-sm" role="group">
+
+      ${
+        currentUser.role === "admin" && !user.is_active
+          ? `
+          <button class="btn btn-outline-success approve-btn" data-id="${user.id}">
+              <i class="bi bi-check-lg"></i>
+          </button>
+          `
+          : ""
+      }
+
+      <button class="btn btn-outline-primary edit-btn" data-id="${user.id}">
+          <i class="bi bi-pencil-square"></i>
+      </button>
+
+      <button class="btn btn-outline-warning password-btn" data-id="${user.id}">
+          <i class="bi bi-key"></i>
+      </button>
+
+      ${
+        currentUser.role === "admin"
+          ? `
+      <button class="btn btn-outline-danger delete-btn" data-id="${user.id}">
+          <i class="bi bi-trash"></i>
+      </button>
+      `
+          : ""
+      }
+  </div>
+</td>
+
+                  </td>
+              `;
+          tbody.appendChild(row);
+        });
+
+        // Add event listeners to buttons
+        document.querySelectorAll(".edit-btn").forEach((btn) => {
+          btn.addEventListener("click", () => openEditModal(btn.dataset.id));
+        });
+
+        document.querySelectorAll(".password-btn").forEach((btn) => {
+          btn.addEventListener("click", () =>
+            openChangePasswordModal(btn.dataset.id)
+          );
+        });
+document.querySelectorAll(".approve-btn").forEach((btn) => {
+  btn.addEventListener("click", () => approveUser(btn.dataset.id));
+});
+
+        document.querySelectorAll(".delete-btn").forEach((btn) => {
+          btn.addEventListener("click", () =>
+            confirmDeleteUser(btn.dataset.id)
+          );
+        });
+      }
+
+      // Render pagination
+      function renderPagination() {
+        const pagination = document.getElementById("pagination");
+        pagination.innerHTML = "";
+
+        const totalPages = Math.ceil(totalUsers / limit);
+
+        if (totalPages <= 1) return;
+
+        // Previous button
+        const prevLi = document.createElement("li");
+        prevLi.className = `page-item ${currentPage === 1 ? "disabled" : ""}`;
+        prevLi.innerHTML = `
+              <a class="page-link" href="#" aria-label="Previous" id="prevPage">
+                  <span aria-hidden="true">&laquo;</span>
+              </a>
+          `;
+        pagination.appendChild(prevLi);
+
+        // Page numbers
+        for (let i = 1; i <= totalPages; i++) {
+          const pageLi = document.createElement("li");
+          pageLi.className = `page-item ${i === currentPage ? "active" : ""}`;
+          pageLi.innerHTML = `
+                  <a class="page-link" href="#" data-page="${i}">${i}</a>
+              `;
+          pagination.appendChild(pageLi);
+        }
+
+        // Next button
+        const nextLi = document.createElement("li");
+        nextLi.className = `page-item ${
+          currentPage === totalPages ? "disabled" : ""
+        }`;
+        nextLi.innerHTML = `
+              <a class="page-link" href="#" aria-label="Next" id="nextPage">
+                  <span aria-hidden="true">&raquo;</span>
+              </a>
+          `;
+        pagination.appendChild(nextLi);
+
+        // Add event listeners
+        document.querySelectorAll(".page-link").forEach((link) => {
+          if (link.id === "prevPage") {
+            link.addEventListener("click", (e) => {
+              e.preventDefault();
+              if (currentPage > 1) {
+                fetchUsers(currentPage - 1, getSearchFilter());
+              }
+            });
+          } else if (link.id === "nextPage") {
+            link.addEventListener("click", (e) => {
+              e.preventDefault();
+              if (currentPage < totalPages) {
+                fetchUsers(currentPage + 1, getSearchFilter());
+              }
+            });
+          } else if (link.dataset.page) {
+            link.addEventListener("click", (e) => {
+              e.preventDefault();
+              fetchUsers(parseInt(link.dataset.page), getSearchFilter());
+            });
+          }
+        });
+      }
+
+      // Get search and filter values
+      function getSearchFilter() {
+        const search = document.getElementById("searchInput").value;
+        const role = document.getElementById("roleFilter").value;
+        const status = document.getElementById("statusFilter").value;
+        return { search, role, status };
+      }
+
+      // Setup event listeners
+      function setupEventListeners() {
+        // Search and filter
+        document.getElementById("searchBtn").addEventListener("click", () => {
+          const { search, role, status } = getSearchFilter();
+          fetchUsers(1, search, role, status);
+        });
+
+        document
+          .getElementById("searchInput")
+          .addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+              const { search, role, status } = getSearchFilter();
+              fetchUsers(1, search, role, status);
+            }
+          });
+
+        document.getElementById("roleFilter").addEventListener("change", () => {
+          const { search, role, status } = getSearchFilter();
+          fetchUsers(1, search, role, status);
+        });
+
+        document
+          .getElementById("statusFilter")
+          .addEventListener("change", () => {
+            const { search, role, status } = getSearchFilter();
+            fetchUsers(1, search, role, status);
+          });
+
+        // Add user
+        document
+          .getElementById("saveUserBtn")
+          .addEventListener("click", addUser);
+
+        // Edit user
+        document
+          .getElementById("updateUserBtn")
+          .addEventListener("click", updateUser);
+
+        // Change password
+        document
+          .getElementById("savePasswordBtn")
+          .addEventListener("click", changePassword);
+
+        // Delete confirmation
+        document
+          .getElementById("confirmActionBtn")
+          .addEventListener("click", deleteUser);
+      }
+
+      // Open edit modal
+      async function openEditModal(userId) {
+        try {
+          const response = await fetch(`/api/users/${userId}`, {
+            credentials: "include",
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to fetch user data");
+          }
+
+          const user = await response.json();
+
+          document.getElementById("editUserId").value = user.id;
+          document.getElementById("editUsername").value = user.username;
+          document.getElementById("editFullName").value = user.full_name;
+          document.getElementById("editRole").value = user.role;
+          document.getElementById("editIsActive").checked = user.is_active;
+
+          const modal = new bootstrap.Modal(
+            document.getElementById("editUserModal")
+          );
+          modal.show();
+        } catch (error) {
+          console.error("Error opening edit modal:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Gagal memuat data user",
+          });
+        }
+      }
+
+      // Open change password modal
+      async function openChangePasswordModal(userId) {
+        currentUserId = userId;
+
+        // Hide current password field if admin is changing someone else's password
+        const currentPasswordField = document.getElementById(
+          "currentPasswordField"
+        );
+        if (
+          currentUser.role === "admin" &&
+          currentUser.id !== parseInt(userId)
+        ) {
+          currentPasswordField.style.display = "none";
+        } else {
+          currentPasswordField.style.display = "block";
+        }
+
+        // Reset form
+        document.getElementById("changePasswordForm").reset();
+        document.getElementById("changePasswordUserId").value = userId;
+
+        const modal = new bootstrap.Modal(
+          document.getElementById("changePasswordModal")
+        );
+        modal.show();
+      }
+
+      // Add new user
+      async function addUser() {
+        const username = document.getElementById("addUsername").value;
+        const password = document.getElementById("addPassword").value;
+        const fullName = document.getElementById("addFullName").value;
+        const role = document.getElementById("addRole").value;
+
+        if (!username || !password || !fullName) {
+          Swal.fire({
+            icon: "warning",
+            title: "Peringatan",
+            text: "Semua field harus diisi",
+          });
+          return;
+        }
+
+        if (password.length < 6) {
+          Swal.fire({
+            icon: "warning",
+            title: "Peringatan",
+            text: "Password harus minimal 6 karakter",
+          });
+          return;
+        }
+
+        try {
+          const response = await fetch("/api/users", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              username,
+              password,
+              full_name: fullName,
+              role,
+            }),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Failed to add user");
+          }
+
+          // Close modal and refresh data
+          bootstrap.Modal.getInstance(
+            document.getElementById("addUserModal")
+          ).hide();
+          document.getElementById("addUserForm").reset();
+
+          Swal.fire({
+            icon: "success",
+            title: "Sukses",
+            text: "User berhasil ditambahkan",
+          });
+
+          fetchUsers(currentPage, getSearchFilter());
+        } catch (error) {
+          console.error("Error adding user:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: error.message || "Gagal menambahkan user",
+          });
+        }
+      }
+
+      // Update user
+      async function updateUser() {
+        const userId = document.getElementById("editUserId").value;
+        const username = document.getElementById("editUsername").value;
+        const fullName = document.getElementById("editFullName").value;
+        const role = document.getElementById("editRole").value;
+        const isActive = document.getElementById("editIsActive").checked;
+
+        if (!username || !fullName) {
+          Swal.fire({
+            icon: "warning",
+            title: "Peringatan",
+            text: "Username dan nama lengkap harus diisi",
+          });
+          return;
+        }
+
+        try {
+          const response = await fetch(`/api/users/${userId}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              username,
+              full_name: fullName,
+              role,
+              is_active: isActive,
+            }),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Failed to update user");
+          }
+
+          // Close modal and refresh data
+          bootstrap.Modal.getInstance(
+            document.getElementById("editUserModal")
+          ).hide();
+
+          Swal.fire({
+            icon: "success",
+            title: "Sukses",
+            text: "User berhasil diperbarui",
+          });
+
+          fetchUsers(currentPage, getSearchFilter());
+        } catch (error) {
+          console.error("Error updating user:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: error.message || "Gagal memperbarui user",
+          });
+        }
+      }
+
+      // Change password
+      async function changePassword() {
+        const userId = document.getElementById("changePasswordUserId").value;
+        const currentPassword =
+          document.getElementById("currentPassword").value;
+        const newPassword = document.getElementById("newPassword").value;
+        const confirmPassword =
+          document.getElementById("confirmPassword").value;
+
+        if (!newPassword || !confirmPassword) {
+          Swal.fire({
+            icon: "warning",
+            title: "Peringatan",
+            text: "Password baru dan konfirmasi harus diisi",
+          });
+          return;
+        }
+
+        if (newPassword.length < 6) {
+          Swal.fire({
+            icon: "warning",
+            title: "Peringatan",
+            text: "Password baru harus minimal 6 karakter",
+          });
+          return;
+        }
+
+        if (newPassword !== confirmPassword) {
+          Swal.fire({
+            icon: "warning",
+            title: "Peringatan",
+            text: "Password baru dan konfirmasi tidak cocok",
+          });
+          return;
+        }
+
+        try {
+          const response = await fetch(`/api/users/${userId}/change-password`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              currentPassword:
+                currentUser.role === "admin" &&
+                currentUser.id !== parseInt(userId)
+                  ? ""
+                  : currentPassword,
+              newPassword,
+            }),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Failed to change password");
+          }
+
+          // Close modal and refresh data
+          bootstrap.Modal.getInstance(
+            document.getElementById("changePasswordModal")
+          ).hide();
+          document.getElementById("changePasswordForm").reset();
+
+          Swal.fire({
+            icon: "success",
+            title: "Sukses",
+            text: "Password berhasil diubah",
+          });
+        } catch (error) {
+          console.error("Error changing password:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: error.message || "Gagal mengubah password",
+          });
+        }
+      }
+
+      // Confirm delete user
+      function confirmDeleteUser(userId) {
+        currentUserId = userId;
+        const modal = new bootstrap.Modal(
+          document.getElementById("confirmationModal")
+        );
+        modal.show();
+      }
+
+      // Delete user
+      async function deleteUser() {
+        try {
+          const response = await fetch(`/api/users/${currentUserId}`, {
+            method: "DELETE",
+            credentials: "include",
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to delete user");
+          }
+
+          // Close modal and refresh data
+          bootstrap.Modal.getInstance(
+            document.getElementById("confirmationModal")
+          ).hide();
+
+          Swal.fire({
+            icon: "success",
+            title: "Sukses",
+            text: "User berhasil dihapus",
+          });
+
+          fetchUsers(currentPage, getSearchFilter());
+        } catch (error) {
+          console.error("Error deleting user:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Gagal menghapus user",
+          });
+        }
+      }
+
+      // aprove user
+      async function approveUser(userId) {
+  const confirm = await Swal.fire({
+    title: "ACC User?",
+    text: "User ini akan diaktifkan dan bisa login",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Ya, ACC",
+    cancelButtonText: "Batal",
+  });
+
+  if (!confirm.isConfirmed) return;
+
+  try {
+    const response = await fetch(`/api/users/${userId}/approve`, {
+      method: "PUT",
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("Gagal ACC user");
+    }
+
+    Swal.fire({
+      icon: "success",
+      title: "Berhasil",
+      text: "User berhasil di-ACC",
+    });
+
+    fetchUsers(currentPage, getSearchFilter());
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: error.message,
+    });
+  }
+}
+
+    </script>
+  </body>
+</html>

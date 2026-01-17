@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>File Manager</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+    />
+
+    <style>
+      .file-manager-container {
+        max-width: 1000px;
+      }
+      .file-card {
+        transition: transform 0.2s;
+        margin-bottom: 20px;
+      }
+      .file-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+      .file-icon {
+        font-size: 3rem;
+        margin-bottom: 10px;
+      }
+      .progress-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+        display: none;
+        justify-content: center;
+        align-items: center;
+      }
+      .file-type-icon {
+        width: 48px;
+        height: 48px;
+        margin-right: 10px;
+      }
+      .company {
+        font-size: 11px;
+        padding: 10px;
+        margin-top: 350px;
+      }
+
+      /* Sidebar Styles */
+      .sidebar {
+        width: 150px;
+        background-color: #212529;
+        color: white;
+        height: 100vh;
+        position: fixed;
+        padding-top: 20px;
+        transition: all 0.3s;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      .sidebar-header {
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .sidebar-header img {
+        width: 70px;
+        margin-right: 5px;
+      }
+
+      .sidebar-header h5 {
+        font-size: 1rem;
+        font-weight: bold;
+        margin: 0;
+      }
+
+      .sidebar-menu {
+        list-style: none;
+        padding: 0;
+      }
+
+      .sidebar-menu li {
+        padding: 5px 10px;
+        font-size: 13px;
+        border-left: 3px solid transparent;
+        transition: all 0.3s;
+      }
+
+      .sidebar-menu li:hover {
+        background-color: #343a40;
+        border-left: 3px solid #007bff;
+      }
+
+      .sidebar-menu li a {
+        color: white;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+      }
+
+      .sidebar-menu li a i {
+        margin-right: 10px;
+        font-size: 1rem;
+      }
+
+      .sidebar-menu li.active {
+        background-color: #343a40;
+        border-left: 3px solid #007bff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <img src="tel.jpg" alt="Company Logo" />
+        <h5>- HRD</h5>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="nav-item">
+          <a class="" href="/input">
+            <i class="bi bi-pencil-square"></i>
+            <span>Form Input</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="" href="/beasiswa">
+            <i class="bi bi-people me-2"></i>Beasiswa
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="" href="/users">
+            <i class="bi bi-person-lines-fill me-2"></i>Manajemen User
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="" href="/parameternilai">
+            <i class="bi bi-sliders me-2"></i>Parameter Nilai
+          </a>
+        </li>
+        <li class="nav-item active">
+          <a class="" href="/files">
+            <i class="bi bi-file-earmark-text"></i>Files
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="" href="/import">
+            <i class="bi bi-database-up"></i>Import
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="text-danger" href="#" id="logoutBtn">
+            <i class="bi bi-box-arrow-right me-2"></i>Logout
+          </a>
+        </li>
+      </ul>
+      <div class="company">
+        <p>PT. Tanjungenim Lestari Pulp And Paper</p>
+      </div>
+    </div>
+    <div class="container file-manager-container">
+      <h2 class="text-center mb-4">File Manager</h2>
+
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Upload New File</h5>
+        </div>
+        <div class="card-body">
+          <form id="uploadForm" enctype="multipart/form-data">
+            <div class="mb-3">
+              <label for="fileInput" class="form-label">Select File</label>
+              <input class="form-control" type="file" id="fileInput" required />
+            </div>
+            <div class="mb-3">
+              <label for="fileDescription" class="form-label"
+                >Description (Optional)</label
+              >
+              <textarea
+                class="form-control"
+                id="fileDescription"
+                rows="2"
+              ></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-upload"></i> Upload File
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div
+          class="card-header d-flex justify-content-between align-items-center"
+        >
+          <h5 class="card-title mb-0">Stored Files</h5>
+          <div class="input-group" style="width: 300px">
+            <input
+              type="text"
+              id="fileSearch"
+              class="form-control"
+              placeholder="Search files..."
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="searchButton"
+            >
+              <i class="bi bi-search"></i>
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>File Name</th>
+                  <th>Type</th>
+                  <th>Size</th>
+                  <th>Uploaded By</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="fileTableBody">
+                <!-- Files will be loaded here -->
+              </tbody>
+            </table>
+          </div>
+          <nav aria-label="File pagination">
+            <ul class="pagination justify-content-center" id="pagination">
+              <!-- Pagination will be added here -->
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress Modal -->
+    <div class="progress-container" id="progressContainer">
+      <div class="card" style="width: 400px">
+        <div class="card-body text-center">
+          <div class="spinner-border text-primary mb-3" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <h5 id="progressText">Processing...</h5>
+          <div class="progress mt-2">
+            <div
+              class="progress-bar progress-bar-striped progress-bar-animated"
+              id="progressBar"
+              role="progressbar"
+              style="width: 0%"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- File Preview Modal -->
+    <div
+      class="modal fade"
+      id="filePreviewModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="previewModalTitle">File Preview</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body text-center" id="previewModalBody">
+            <!-- Preview content will be loaded here -->
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="downloadPreviewBtn"
+            >
+              <i class="bi bi-download"></i> Download
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </body>
+</html>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Check authentication
+    checkAuth();
+    // Initialize file manager
+    initFileManager();
+  });
+
+  // Check authentication
+  async function checkAuth() {
+    try {
+      const response = await fetch("/api/check-auth", {
+        credentials: "include",
+      });
+      const data = await response.json();
+
+      if (!data.authenticated) {
+        window.location.href = "/login";
+        return;
+      }
+
+      currentUser = data.user;
+
+      // Hide admin features if not admin
+      if (currentUser.role !== "admin") {
+        document.querySelector('[href="/users"]').style.display = "none";
+      } // Hide admin features if not admin
+      if (currentUser.role !== "admin") {
+        document.querySelector('[href="/parameternilai"]').style.display =
+          "none";
+      }
+
+      // Set up logout
+      document.getElementById("logoutBtn").addEventListener("click", logout);
+    } catch (error) {
+      console.error("Auth check error:", error);
+      window.location.href = "/input"; //-"/Login"-//
+    }
+  }
+
+  // Logout function
+  async function logout() {
+    try {
+      const response = await fetch("/api/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+      const data = await response.json();
+      if (data.success) {
+        window.location.href = "/login";
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  }
+
+  function initFileManager() {
+    // Load files on page load
+    loadFiles();
+
+    // Set up form submission
+    document
+      .getElementById("uploadForm")
+      .addEventListener("submit", handleFileUpload);
+
+    // Set up search functionality
+    document
+      .getElementById("searchButton")
+      .addEventListener("click", loadFiles);
+    document
+      .getElementById("fileSearch")
+      .addEventListener("keyup", function (e) {
+        if (e.key === "Enter") {
+          loadFiles();
+        }
+      });
+
+    // Initialize modal
+    const previewModal = new bootstrap.Modal(
+      document.getElementById("filePreviewModal")
+    );
+    document
+      .getElementById("downloadPreviewBtn")
+      .addEventListener("click", downloadPreviewedFile);
+  }
+
+  let currentFiles = [];
+  let currentFileId = null;
+
+  function loadFiles(page = 1, search = "") {
+    const searchQuery = document.getElementById("fileSearch").value;
+    const query = searchQuery
+      ? `?search=${encodeURIComponent(searchQuery)}&page=${page}`
+      : `?page=${page}`;
+
+    showProgress("Loading files...");
+
+    fetch(`/api/files${query}`, {
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((files) => {
+        currentFiles = files;
+        renderFileTable(files);
+        hideProgress();
+      })
+      .catch((error) => {
+        console.error("Error loading files:", error);
+        hideProgress();
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Failed to load files. Please try again.",
+        });
+      });
+  }
+
+  function renderFileTable(files) {
+    const tableBody = document.getElementById("fileTableBody");
+    tableBody.innerHTML = "";
+
+    if (files.length === 0) {
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="6" class="text-center py-4 text-muted">
+            No files found. Upload a file to get started.
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    files.forEach((file) => {
+      const row = document.createElement("tr");
+
+      // Get file icon based on type
+      const fileIcon = getFileIcon(file.file_type);
+
+      // Format file size
+      const fileSize = formatFileSize(file.file_size);
+
+      // Format date
+      const uploadDate = new Date(file.upload_date).toLocaleString();
+
+      row.innerHTML = `
+        <td>
+          <div class="d-flex align-items-center">
+            <img src="${fileIcon}" alt="File type" class="file-type-icon">
+            <div>
+              <div class="fw-bold">${file.file_name}</div>
+              <small class="text-muted">${
+                file.description || "No description"
+              }</small>
+            </div>
+          </div>
+        </td>
+        <td>${file.file_type}</td>
+        <td>${fileSize}</td>
+        <td>${file.uploaded_by_username || "System"}</td>
+        <td>${uploadDate}</td>
+        <td>
+          <div class="btn-group btn-group-sm">
+            <button class="btn btn-outline-primary preview-btn" data-file-id="${
+              file.file_id
+            }">
+              <i class="bi bi-eye"></i>
+            </button>
+            <button class="btn btn-outline-success download-btn" data-file-id="${
+              file.file_id
+            }">
+              <i class="bi bi-download"></i>
+            </button>
+            <button class="btn btn-outline-danger delete-btn" data-file-id="${
+              file.file_id
+            }">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </td>
+      `;
+
+      tableBody.appendChild(row);
+    });
+
+    // Add event listeners to buttons
+    document.querySelectorAll(".preview-btn").forEach((btn) => {
+      btn.addEventListener("click", previewFile);
+    });
+
+    document.querySelectorAll(".download-btn").forEach((btn) => {
+      btn.addEventListener("click", downloadFile);
+    });
+
+    document.querySelectorAll(".delete-btn").forEach((btn) => {
+      btn.addEventListener("click", deleteFile);
+    });
+  }
+
+  function getFileIcon(fileType) {
+    const type = fileType.split("/")[0];
+    const subtype = fileType.split("/")[1];
+
+    const icons = {
+      image: "bi-file-image",
+      audio: "bi-file-music",
+      video: "bi-file-play",
+      application: {
+        pdf: "bi-file-pdf",
+        msword: "bi-file-word",
+        "vnd.openxmlformats-officedocument.wordprocessingml.document":
+          "bi-file-word",
+        "vnd.ms-excel": "bi-file-excel",
+        "vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+          "bi-file-excel",
+        "vnd.ms-powerpoint": "bi-file-ppt",
+        "vnd.openxmlformats-officedocument.presentationml.presentation":
+          "bi-file-ppt",
+        zip: "bi-file-zip",
+        "x-rar-compressed": "bi-file-zip",
+        "x-7z-compressed": "bi-file-zip",
+        json: "bi-file-code",
+        javascript: "bi-file-code",
+        "x-javascript": "bi-file-code",
+      },
+      text: "bi-file-text",
+    };
+
+    let iconClass = "bi-file-earmark"; // Default icon
+
+    if (icons[type]) {
+      if (typeof icons[type] === "string") {
+        iconClass = icons[type];
+      } else if (icons[type][subtype]) {
+        iconClass = icons[type][subtype];
+      }
+    }
+
+    // Return SVG data URI for the icon
+    return `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' fill='currentColor' class='bi ${iconClass}' viewBox='0 0 16 16'><path d='M4 0h5.5v1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h1V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2z'/><path d='M9.5 3V0L14 4.5h-3A1.5 1.5 0 0 1 9.5 3z'/></svg>`;
+  }
+
+  function formatFileSize(bytes) {
+    if (bytes === 0) return "0 Bytes";
+    const k = 1024;
+    const sizes = ["Bytes", "KB", "MB", "GB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2) + " " + sizes[i]);
+  }
+
+  function handleFileUpload(e) {
+    e.preventDefault();
+
+    const fileInput = document.getElementById("fileInput");
+    const description = document.getElementById("fileDescription").value;
+
+    if (fileInput.files.length === 0) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Please select a file to upload",
+      });
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", fileInput.files[0]);
+    formData.append("description", description);
+
+    showProgress("Uploading file...");
+
+    fetch("/api/files", {
+      method: "POST",
+      body: formData,
+      credentials: "include",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Upload failed");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        hideProgress();
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "File uploaded successfully",
+        });
+        // Reset form and reload files
+        fileInput.value = "";
+        document.getElementById("fileDescription").value = "";
+        loadFiles();
+      })
+      .catch((error) => {
+        hideProgress();
+        console.error("Upload error:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Failed to upload file. Please try again.",
+        });
+      });
+  }
+
+  function previewFile(e) {
+    const fileId = e.currentTarget.getAttribute("data-file-id");
+    const file = currentFiles.find((f) => f.file_id === fileId);
+
+    if (!file) return;
+
+    currentFileId = fileId;
+
+    const previewModal = bootstrap.Modal.getInstance(
+      document.getElementById("filePreviewModal")
+    );
+    const modalTitle = document.getElementById("previewModalTitle");
+    const modalBody = document.getElementById("previewModalBody");
+
+    modalTitle.textContent = `Preview: ${file.file_name}`;
+    modalBody.innerHTML = `
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p>Loading preview...</p>
+    `;
+
+    previewModal.show();
+
+    // Fetch file data for preview
+    fetch(`/api/files/${fileId}`, {
+      credentials: "include",
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error("Failed to load file");
+        return response.blob();
+      })
+      .then((blob) => {
+        const fileType = file.file_type.split("/")[0];
+        const url = URL.createObjectURL(blob);
+
+        let previewContent = "";
+
+        if (fileType === "image") {
+          previewContent = `<img src="${url}" class="img-fluid" alt="Preview">`;
+        } else if (file.file_type === "application/pdf") {
+          previewContent = `
+          <iframe src="${url}" width="100%" height="600px" style="border: none;"></iframe>
+        `;
+        } else if (
+          file.file_type.includes("msword") ||
+          file.file_type.includes("wordprocessingml")
+        ) {
+          previewContent = `
+          <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> Word documents can't be previewed directly. 
+            Please download the file to view it.
+          </div>
+        `;
+        } else if (fileType === "text") {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            modalBody.innerHTML = `
+            <pre class="bg-light p-3">${e.target.result}</pre>
+          `;
+          };
+          reader.readAsText(blob);
+          return;
+        } else {
+          previewContent = `
+          <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> This file type can't be previewed. 
+            Please download the file to view it.
+          </div>
+        `;
+        }
+
+        modalBody.innerHTML = previewContent;
+      })
+      .catch((error) => {
+        console.error("Preview error:", error);
+        modalBody.innerHTML = `
+        <div class="alert alert-danger">
+          <i class="bi bi-exclamation-triangle"></i> Failed to load preview. 
+          Please download the file to view it.
+        </div>
+      `;
+      });
+  }
+
+  function downloadPreviewedFile() {
+    if (!currentFileId) return;
+
+    const file = currentFiles.find((f) => f.file_id === currentFileId);
+    if (!file) return;
+
+    downloadFileById(currentFileId, file.file_name);
+  }
+
+  function downloadFile(e) {
+    const fileId = e.currentTarget.getAttribute("data-file-id");
+    const file = currentFiles.find((f) => f.file_id === fileId);
+
+    if (!file) return;
+
+    downloadFileById(fileId, file.file_name);
+  }
+
+  function downloadFileById(fileId, fileName) {
+    showProgress(`Preparing ${fileName} for download...`);
+    console.log(typeof fileId);
+    fetch(`/api/files/${fileId}`, {
+      credentials: "include",
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error("Download failed");
+        return response.blob();
+      })
+      .then((blob) => {
+        hideProgress();
+
+        // Create download link
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        a.remove();
+      })
+      .catch((error) => {
+        hideProgress();
+        console.error("Download error:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Failed to download file. Please try again.",
+        });
+      });
+  }
+
+  function deleteFile(e) {
+    const fileId = e.currentTarget.getAttribute("data-file-id");
+    const file = currentFiles.find((f) => f.file_id === fileId);
+
+    if (!file) return;
+
+    Swal.fire({
+      title: "Are you sure?",
+      text: `You are about to delete "${file.file_name}". This action cannot be undone.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        showProgress("Deleting file...");
+
+        fetch(`/api/files/${fileId}`, {
+          method: "DELETE",
+          credentials: "include",
+        })
+          .then((response) => {
+            if (!response.ok) throw new Error("Delete failed");
+            return response.json();
+          })
+          .then((data) => {
+            hideProgress();
+            Swal.fire({
+              icon: "success",
+              title: "Deleted!",
+              text: "File has been deleted.",
+            });
+            loadFiles();
+          })
+          .catch((error) => {
+            hideProgress();
+            console.error("Delete error:", error);
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: "Failed to delete file. Please try again.",
+            });
+          });
+      }
+    });
+  }
+
+  function showProgress(text) {
+    const progressContainer = document.getElementById("progressContainer");
+    const progressText = document.getElementById("progressText");
+
+    progressText.textContent = text || "Processing...";
+    progressContainer.style.display = "flex";
+  }
+
+  function hideProgress() {
+    document.getElementById("progressContainer").style.display = "none";
+  }
+</script>

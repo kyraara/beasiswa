@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="css/global.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>Edit Parameter Penilaian</title>
+    <style>
+      :root {
+        --primary-color: #3498db;
+        --secondary-color: #2980b9;
+        --accent-color: #e74c3c;
+        --light-gray: #f5f5f5;
+        --medium-gray: #c9c4c4;
+        --dark-gray: #333;
+        --white: #fff;
+        --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        --border-radius: 8px;
+        --transition: all 0.3s ease;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: var(--dark-gray);
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 0;
+      }
+
+      .nav {
+        padding: 15px;
+        background-color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .container {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        padding: 30px;
+      }
+
+      .table-container {
+        background-color: var(--white);
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        width: 100%;
+        max-width: 380px;
+        overflow: hidden;
+        flex: 2;
+        display: flex;
+        flex-direction: column;
+        font-size: 14px;
+      }
+
+      .table-header {
+        background-color: var(--primary-color);
+        color: var(--white);
+        padding: 6px;
+        text-align: left;
+        display: flex;
+      }
+
+      .table-header div {
+        flex: 1;
+        padding: 0 6px;
+      }
+
+      .table-body {
+        overflow-y: auto;
+        max-height: 400px; /* Adjust this value as needed */
+      }
+
+      .table-row {
+        display: flex;
+        border-bottom: 1px solid var(--medium-gray);
+      }
+
+      .table-row div {
+        flex: 1;
+        padding: 6px;
+        text-align: left;
+      }
+
+      .table-row:hover {
+        background-color: var(--light-gray);
+      }
+
+      #parameterTable {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0;
+      }
+
+      #parameterTable thead {
+        background-color: var(--primary-color);
+        color: var(--white);
+        text-align: center;
+        position: sticky;
+        top: 0;
+      }
+
+      #parameterTable th,
+      #parameterTable td {
+        padding: 6px;
+        border: 1px solid var(--medium-gray);
+      }
+
+      #parameterTable td {
+        text-align: center;
+      }
+
+      #parameterTable tbody {
+        display: block;
+        overflow-y: auto;
+        max-height: 540px; /* Adjust this value as needed */
+      }
+
+      #parameterTable thead,
+      #parameterTable tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+      }
+
+      #parameterTable tbody tr {
+        transition: background-color 0.3s ease;
+      }
+
+      #parameterTable tbody tr:hover {
+        background-color: var(--light-gray);
+      }
+
+      #parameterTable button {
+        background-color: var(--primary-color);
+        color: var(--white);
+        border: none;
+        padding: 5px;
+        font-size: 14px;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        transition: var(--transition);
+      }
+
+      #parameterTable button:hover {
+        background-color: var(--secondary-color);
+      }
+
+      #editForm {
+        background-color: var(--white);
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        padding: 20px;
+        flex: 1;
+
+        display: none;
+      }
+
+      #editForm h4 {
+        color: var(--primary-color);
+        border-bottom: 2px solid var(--medium-gray);
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+      }
+
+      #editParameterForm div {
+        margin-bottom: 15px;
+      }
+
+      #editParameterForm label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: var(--dark-gray);
+      }
+
+      #editParameterForm input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid var(--medium-gray);
+        border-radius: var(--border-radius);
+        box-sizing: border-box;
+      }
+
+      #editParameterForm input[readonly] {
+        background-color: var(--light-gray);
+        color: var(--dark-gray);
+      }
+
+      .tombol {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .tombol button {
+        flex: 1;
+        padding: 10px;
+        border: none;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        transition: var(--transition);
+      }
+
+      .tombol button[type="submit"] {
+        background-color: var(--primary-color);
+        color: var(--white);
+      }
+
+      .tombol button[type="submit"]:hover {
+        background-color: var(--secondary-color);
+      }
+
+      .tombol button[type="button"] {
+        background-color: var(--medium-gray);
+        color: var(--dark-gray);
+      }
+
+      .tombol button[type="button"]:hover {
+        background-color: #d0d0d0;
+      }
+
+      .keterangan {
+        background-color: var(--white);
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        padding: 20px;
+        flex: 1;
+        min-width: 250px;
+      }
+
+      .keterangan h3 {
+        color: var(--primary-color);
+      }
+
+      .formula-section {
+        background-color: var(--white);
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        padding: 20px;
+        margin-top: 20px;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          flex-direction: column;
+          gap: 20px;
+        }
+
+        .table-container,
+        #editForm,
+        .keterangan {
+          max-width: 100%;
+        }
+      }
+      .company {
+        font-size: 11px;
+        padding: 10px;
+        margin-top: 350px;
+      }
+
+      /* Sidebar Styles */
+      .sidebar {
+        width: 150px;
+        background-color: #212529;
+        color: white;
+        height: 100vh;
+        position: fixed;
+        padding-top: 20px;
+        transition: all 0.3s;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      .sidebar-header {
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .sidebar-header img {
+        width: 70px;
+        margin-right: 5px;
+      }
+
+      .sidebar-header h5 {
+        font-size: 1rem;
+        font-weight: bold;
+        margin: 0;
+      }
+
+      .sidebar-menu {
+        list-style: none;
+        padding: 0;
+      }
+
+      .sidebar-menu li {
+        padding: 5px 10px;
+        font-size: 13px;
+        border-left: 3px solid transparent;
+        transition: all 0.3s;
+      }
+
+      .sidebar-menu li:hover {
+        background-color: #343a40;
+        border-left: 3px solid #007bff;
+      }
+
+      .sidebar-menu li a {
+        color: white;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+      }
+
+      .sidebar-menu li a i {
+        margin-right: 10px;
+        font-size: 1rem;
+      }
+
+      .sidebar-menu li.active {
+        background-color: #343a40;
+        border-left: 3px solid #007bff;
+      }
+      .container {
+        margin-left: 150px;
+        height: 100%;
+      }
+
+      #parameterTable th,
+      #parameterTable td {
+        padding: 6px;
+        border: 1px solid var(--medium-gray);
+      }
+      .kepalatable {
+        width: 150px;
+      }
+      .valueku {
+        width: 50px;
+      }
+      .keynilaiku {
+        width: 100px;
+      }
+      .aksih {
+        width: 80px;
+        text-align: center;
+      }
+      .aksi {
+        background-color: white !important;
+        color: rgb(0, 110, 255) !important;
+        border: solid 1px rgb(0, 110, 255) !important;
+        border-radius: 3px !important;
+        width: 30px;
+      }
+      .aksi:hover {
+        background-color: rgb(0, 110, 255) !important;
+        color: white !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sidebar">
+      <div class="sidebar-header">
+
+        <h5>- BEASISWA</h5>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="nav-item">
+          <a class="" href="/input">
+            <i class="bi bi-pencil-square"></i>
+            <span>Form Input</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="" href="/beasiswa">
+            <i class="bi bi-people me-2"></i>Beasiswa
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="" href="/users">
+            <i class="bi bi-person-lines-fill me-2"></i>Manajemen User
+          </a>
+        </li>
+        <li class="nav-item active">
+          <a class="" href="/parameternilai">
+            <i class="bi bi-sliders me-2"></i>Parameter Nilai
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="" href="/files">
+            <i class="bi bi-file-earmark-text"></i>Files
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="" href="/import">
+            <i class="bi bi-database-up"></i>Import
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="text-danger" href="#" id="logoutButton">
+            <i class="bi bi-box-arrow-right me-2"></i>Logout
+          </a>
+        </li>
+      </ul>
+      <div class="company"></div>
+    </div>
+    <div class="container">
+      <div class="table-container">
+        <table id="parameterTable">
+          <thead>
+            <tr>
+              <th class="kepalatable">Kategori</th>
+              <th class="keynilaiku">Key Nilai</th>
+              <th class="valueku">Value Score</th>
+              <th class="aksih">Edit</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Data will be populated here by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Edit Form -->
+      <div id="editForm">
+        <form id="editParameterForm">
+          <h4 id="kategorinama"></h4>
+          <div>
+            <input type="hidden" id="editKategori" name="kategori" readonly />
+            <input type="text" id="editKeyNilai" name="key_nilai" readonly />
+          </div>
+          <div>
+            <label for="editValueNilai">Value Score</label>
+            <input
+              type="text"
+              id="editValueNilai"
+              name="value_nilai"
+              required
+            />
+          </div>
+          <div class="tombol">
+            <button type="submit">Simpan</button>
+            <button type="button" onclick="cancelEdit()">Batal</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="keterangan">
+        <h3>Keterangan</h3>
+        <p>gradeScore = Grade Karyawan</p>
+        <p>accreditationScore = Akreditasi Sekolah</p>
+        <p>achievementScore = Prestasi Non Akademik</p>
+        <p>paScore = Employee PA</p>
+      </div>
+    </div>
+
+    <script>
+      let parameterMaps = {};
+
+      // Fungsi untuk mengambil data parameter penilaian dari backend
+      async function fetchParameterMaps() {
+        try {
+          const response = await fetch(
+            "http://10.35.2.200:5001/api/parameternilai"
+          );
+          if (!response.ok) {
+            throw new Error("Gagal mengambil data parameter penilaian");
+          }
+          parameterMaps = await response.json();
+          displayParameterMaps(parameterMaps);
+        } catch (error) {
+          console.error("Error fetching parameter maps:", error);
+          alert("Terjadi kesalahan saat mengambil data parameter penilaian.");
+        }
+      }
+
+      // Fungsi untuk membuka form edit
+      function openEditForm(kategori, keyNilai, valueNilai) {
+        const kategorinama = document.getElementById("kategorinama");
+        kategorinama.textContent = kategori;
+        document.getElementById("editKategori").value = kategori;
+        document.getElementById("editKeyNilai").value = keyNilai;
+        document.getElementById("editValueNilai").value = valueNilai;
+        document.getElementById("editForm").style.display = "block";
+      }
+
+      // Fungsi untuk membatalkan edit
+      function cancelEdit() {
+        document.getElementById("editForm").style.display = "none";
+      }
+
+      // Fungsi untuk menampilkan data dalam tabel
+      function displayParameterMaps(data) {
+        const tableBody = document.querySelector("#parameterTable tbody");
+        tableBody.innerHTML = "";
+        for (const kategori in data) {
+          for (const key in data[kategori]) {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td class="kepalatable">${kategori}</td>
+              <td class="keynilaiku">${key}</td>
+              <td class="valueku">${data[kategori][key]}</td>
+           
+            <td><button
+                  class="btn btn-outline-secondary aksi"
+                  type="button"
+                  id="searchBtn"
+                  onclick="openEditForm('${kategori}', '${key}', '${data[kategori][key]}')"
+                >
+                <i class="bi bi-pencil-square"></i>
+                </button></td>`;
+            tableBody.appendChild(row);
+          }
+        }
+      }
+
+      // Fungsi untuk mengirim data yang diubah ke backend
+      document
+        .getElementById("editParameterForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
+
+          const kategori = document.getElementById("editKategori").value;
+          const keyNilai = document.getElementById("editKeyNilai").value;
+          const valueNilai = document.getElementById("editValueNilai").value;
+
+          try {
+            const response = await fetch(
+              `http://10.35.2.200:5001/api/parameternilai/${kategori}/${keyNilai}`,
+              {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ value_nilai: valueNilai }),
+              }
+            );
+
+            if (!response.ok) {
+              throw new Error("Gagal mengupdate data parameter penilaian");
+            }
+            function ok(message) {
+              Swal.fire({
+                title: "Sukses!",
+                text: message,
+                icon: "success",
+                confirmButtonText: "OK",
+              });
+            }
+
+            ok();
+            fetchParameterMaps(); // Refresh data
+            cancelEdit(); // Tutup form edit
+          } catch (error) {
+            console.error("Error updating parameter:", error);
+            alert(
+              "Terjadi kesalahan saat mengupdate data parameter penilaian."
+            );
+          }
+        });
+
+      // Inisialisasi saat halaman dimuat
+      document.addEventListener("DOMContentLoaded", fetchParameterMaps);
+    </script>
+    <script type="module">
+      import { protectPage } from "./auth.js";
+      import { logout } from "./auth.js";
+      document.addEventListener("DOMContentLoaded", async () => {
+        const auth = await protectPage();
+        if (auth.authenticated) {
+          // User is authenticated, you can access auth.user
+          console.log("User:", auth.user);
+
+          document
+            .getElementById("logoutButton")
+            .addEventListener("click", async (e) => {
+              e.preventDefault();
+              await logout();
+            });
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,103 @@
+:root {
+    --maincolor :#252734;
+    --secondarycolor :#333646;
+    --ascentcolor:#ff9100;
+}
+
+*{
+    font-family: 'Ubuntu', sans-serif;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+
+.logintel {
+
+    border-radius: 10px;
+    background-color: rgb(107, 107, 107);
+    padding: 45px 25px 10px 25px;
+
+}
+
+.user-img{
+    margin-top: -75px;
+    margin-bottom: 30px;
+}
+
+.user-img img{
+  height: 55px;
+    box-shadow: 0px 0px 3px #848484;
+    border-radius: 5px;
+}
+
+
+
+.form-group::before{
+    font-family: "Font Awesome\ 5 Free";
+    position: absolute;
+    left: 28px;
+    font-size: 22px;
+    padding-top:4px;
+}
+
+.form-group#user-group::before{
+    content: "\f007";
+}
+
+.form-group#contrasena-group::before{
+    content: "\f023";
+}
+
+.btn-custom{
+    background-color: var(--ascentcolor)!important;
+}
+
+.cool-copyright {
+    text-align: center;
+    font-size: 12px;
+    color: #fff;
+   
+}
+
+.home-container {
+    height: 80%
+   
+}
+
+.home-container img {
+   width: 60px;
+   transition: transform 0.2s ease-in-out;
+   /* box-shadow: 10px 10px 10px black */
+}
+
+.home-container img:hover {
+    transform: scale(1.2);
+}
+
+
+
+  .home-container a {
+    text-decoration: none;
+  }
+
+
+  .navbar img {
+    width: 55px;
+  }
+
+  .nav-link:hover{
+    background-color: wheat;
+    color: black!important;
+    border-radius: 7px;
+    transition: 0.3s;
+  }
+
+  .navbar-brand:hover{
+    color: #4891e4!important;
+    transition: 0.2s;
+  }

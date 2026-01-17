@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="css/global.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>Form Beasiswa Anak Karyawan</title>
+    <style>
+      * {
+        font-family: "Ubuntu", sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: #f5f5f5;
+        display: flex;
+        min-height: 100vh;
+      }
+
+      /* Sidebar Styles */
+      .sidebar {
+        width: 140px;
+        background-color: #212529;
+        color: white;
+        height: 100vh;
+        position: fixed;
+        padding-top: 20px;
+        transition: all 0.3s;
+      }
+
+      .sidebar-header {
+        padding-left: 5px;
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .sidebar-header img {
+        width: 70px;
+        margin-right: 5px;
+      }
+
+      .sidebar-header h5 {
+        font-size: 1rem;
+        font-weight: bold;
+        margin: 0;
+      }
+
+      .sidebar-menu {
+        list-style: none;
+        padding: 0;
+      }
+
+      .sidebar-menu li {
+        padding: 5px 10px;
+        font-size: 13px;
+        border-left: 3px solid transparent;
+        transition: all 0.3s;
+      }
+
+     
+
+      .sidebar-menu li a {
+        color: white;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+      }
+
+      .sidebar-menu li a i {
+        margin-right: 10px;
+        font-size: 1rem;
+      }
+
+      .sidebar-menu li.active {
+        background-color: #515a63;
+        border-left: 3px solid #007bff;
+      }
+      .sidebar-menu li:hover {
+        background-color: #515a63;
+        border-left: 3px solid #007bff;
+      }
+      /* Main Content Styles */
+      .main-content {
+        margin-left: 115px;
+        width: calc(100% - 120px);
+        padding-left: 20px;
+      }
+
+      .header {
+        background-color: #212529;
+        margin-left: 6px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        padding-left: 10px;
+        padding: 5px;   
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .header h1 {
+        font-size: 1rem;
+        margin: 0;
+        color: #333;
+      }
+
+      .user-info {
+        display: flex;
+        align-items: center;
+      }
+
+      .user-info img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+
+      .content-container {
+        background-color: white;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        padding: 5px 10px 10px 10px;
+      }
+
+      /* Table Styles */
+      table {
+        width: 100%;
+        max-width: 100%;
+        border-collapse: collapse;
+        background: white;
+        margin-bottom: 20px;
+        overflow-x: auto;
+        display: block;
+        height: 505px;
+        border-radius: 5px;
+      }
+
+      th,
+      td {
+        text-align: left;
+      }
+
+      td {
+        background-color: #fff;
+      }
+
+      th {
+        text-align: center;
+        font-size: 13px;
+        white-space: nowrap !important;
+        background-color: #118b50 !important;
+        color: whitesmoke !important;
+        font-weight: 300;
+      }
+
+      input,
+      select {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: #fff;
+        transition: all 0.3s ease-in-out;
+        font-size: 13px;
+        padding: 4px;
+      }
+
+      button {
+        padding: 5px 15px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+        transition: background-color 0.3s ease;
+      }
+
+      #beasiswaForm {
+   
+        margin-top: 20px;
+      }
+
+      .judul {
+        margin-top: 5px;
+        display: flex;
+        justify-content: center;
+        font-weight: bold;
+      }
+
+      .hapuss {
+        padding-top: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .hapus {
+        padding: 5px;
+        border: none;
+        background: linear-gradient(145deg, rgb(226, 78, 78), crimson);
+        color: white;
+        border-radius: 5px;
+        box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+        transition: all 0.2s ease;
+        border: 1px solid black;
+      }
+
+      .hapus:hover {
+        transform: scale(0.91);
+      }
+
+      /* Sticky Columns */
+      th.sticky,
+      td.sticky {
+        position: sticky;
+        left: -1px;
+        z-index: 1;
+        margin: 0px;
+      }
+
+    
+      td.dilet {
+        background-color: white !important;
+      }
+
+      /* Sticky untuk kolom kedua (NIK) */
+      th.sticky-2,
+      td.sticky-2 {
+        left: 50px; /* Sesuaikan dengan lebar kolom pertama */
+        z-index: 1;
+      }
+
+      td.sticky-2 input,td.sticky-3 input {
+        background-color: #8febbe;
+      }
+
+      /* Sticky untuk kolom ketiga (Employee Name) */
+      th.sticky-3,
+      td.sticky-3 {
+        left: 190px; /* Sesuaikan dengan lebar kolom pertama dan kedua */
+        z-index: 1;
+      }
+
+      .add {
+        padding: 4px;
+        background-color: rgb(20, 84, 204);
+        padding-bottom: 5px;
+        border: none;
+        color: white;
+        border-radius: 5px;
+        box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+        transition: all 0.2s ease;
+        cursor: pointer;
+        all:unset;
+        margin-left: 2px;
+      }
+
+      .kirim {
+        background-color: #f8a648;
+        padding: 4px;
+        margin-left: 5px;
+        border: none;
+        color: black;
+        border-radius: 5px;
+        box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+        transition: all 0.2s ease;
+        cursor: pointer;
+        border: 1px solid wheat;
+        all : unset;
+        margin-left: 8px;
+        margin-bottom: 5px;
+        margin-top: 3px;
+      }
+
+     
+      .kirim:hover {
+        transform: translateY(-2px);
+        color: rgb(245, 146, 33);
+      }
+
+      .add:hover {
+        transform: translateY(-2px);
+        color: green;
+      }
+
+      .daftarlist {
+        padding: 4px;
+        background-color: #1b850d;
+        margin-left: 5px;
+        border: none;
+        color: white;
+        border-radius: 5px;
+        box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+        transition: all 0.2s ease;
+        cursor: pointer;
+      }
+
+      .daftarlist:hover {
+        transform: translateY(-2px);
+      }
+
+      .btn-3d:active {
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        transform: translateY(3px);
+      }
+
+      .ikon {
+        font-size: 12px;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      .btn-logout {
+        background-color: #c22626;
+        color: white;
+        border: none;
+      }
+
+      .btn-logout:hover {
+        background-color: red;
+      }
+
+      .trash {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #dataTable {
+        border: 1px solid rgb(134, 130, 130);
+      }
+
+      .ikon img {
+        margin-right: 3px;
+        margin-left: 2px;
+      }
+
+      /* Nilai Cell Styles */
+      td.nilai-cell {
+        width: 30px !important;
+        min-width: 30px;
+        max-width: 30px;
+        padding: 2px !important;
+      }
+
+      td.nilai-cell input {
+        width: 100% !important;
+        max-width: 30px;
+        height: 25px;
+        padding: 0 3px;
+        font-size: 14px;
+        text-align: center;
+      }
+
+      .nilai-cell {
+        width: 50px;
+        min-width: 50px;
+        max-width: 50px;
+        text-align: center;
+        vertical-align: middle;
+        height: 40px;
+      }
+
+      .nilai-cell input {
+        width: 100% !important;
+        max-width: 30px;
+        height: 25px;
+        font-size: 12px;
+        text-align: center;
+        border: 1px solid #7c6f6f;
+        border-radius: 3px;
+      }
+
+      .nilai-header {
+        font-size: 12px;
+        padding: 0px;
+      }
+
+      .nilaiAkademik {
+        height: 50px;
+        width: 50px;
+      }
+
+      .btn-back {
+        background-color: #ffc107;
+        color: #212529;
+        border: none;
+      }
+
+      .btn {
+        padding: 6px;
+        border-radius: 5px;
+        font-size: 14 px;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        color: black !important;
+        margin-left: 5px;
+      }
+
+      .btn a {
+        text-decoration: none;
+        color: black;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      .inputext {
+        font-size: 12px;
+      }
+
+      .btn1 {
+        padding: 5px 5px;
+        border-radius: 5px;
+        font-size: 12px;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 2px;
+        margin-top: 5px;
+      }
+
+      .btn1:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Container Styles */
+      .bungkustable {
+        background-color: rgb(241, 235, 175);
+        padding: 5px;
+        margin: 0;
+        border-radius: 5px;
+      }
+
+      .containertombol {
+        background-color: #dcebff;
+        padding: 2px;
+        border-radius: 5px;
+        margin-bottom: 5px;
+      }
+
+      .company {
+        font-size: 11px;
+        padding: 10px;
+        margin-top: 320px;
+      }
+      .userlogin{
+     
+        font-size: 1rem;
+      
+        margin-right: 5px;
+      
+      }
+      .roleuser{
+        color:whitesmoke;
+        
+        padding-left: 4px;
+        padding-right: 5px;
+        border-radius: 5px;
+      }
+      #lokout:hover {
+        background-color: #d3aeae;
+        border-left: 3px solid red;
+      }
+    </style>
+  </head>
+
+  <body>
+   <!-- Sidebar -->
+   <div class="sidebar">
+    <div class="sidebar-header">
+      <img src="tel.jpg" alt="Company Logo" />
+      <h5>- HRD</h5>
+    </div>
+    <ul class="sidebar-menu">
+      <li >
+        <a href="/input">
+          <i class="bi bi-pencil-square"></i>
+          <span>Form Input</span>
+        </a>
+      </li>
+   
+      <li class="active">
+        <a href="/nilaisma">
+          <i class="bi bi-journal-bookmark"></i>
+          <span>Input SLTA</span>
+        </a>
+      </li>
+      <li>
+        <a href="/uploadoc">
+          <i class="bi bi-file-earmark-arrow-up"></i>
+          <span>Upload Berkas</span>
+        </a>
+      </li>
+      <li>
+        <a href="/beasiswa">
+          <i class="bi bi-award"></i>
+          <span>Beasiswa List</span>
+        </a>
+      </li>
+      
+      <li>
+        <a href="/users">
+          <i class="bi bi-people"></i>
+          <span>Management</span>
+        </a>
+      </li>
+      <li id="lokout">
+        <a href="/logout" id="logoutButton" style="color: crimson">
+          <i class="fas fa-sign-out-alt"></i>
+          <span style="margin-left: 13px"> Logout</span>
+        </a>
+      </li>
+    </ul>
+    <div class="company"><p>PT. Tanjungenim Lestari Pulp And Paper</p></div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="header">
+      <h1 style="color: white; padding-left: 6px">🏆 Form Nilai SLTA</h1>
+      <div class="roleuser">
+        <span class="userlogin" ><i class="bi bi-person-fill"></i></span><span id="namauser"></span>
+      </div>
+    </div>
+
+    <div class="content-container">
+      <!-- Tombol Tambah Baris -->
+      <div class="containertombol">
+        <button type="button" class="add" onclick="tambahBaris()">
+          <span class="ikon">
+            <span class="ikon"><img src="add.png" width="24px" /> Add </span>
+          </span>
+        </button>
+       
+     
+        <button type="button" class="kirim btn-3d" onclick="confirmSubmit()">
+          <span class="ikon">
+            <img src="submit.png" width="24px" /> Posting
+          </span>
+        </button>
+      </div>
+
+      <!-- Table for Data Input -->
+       <div class="bungkustable">
+      <form id="beasiswaForm"> 
+        <table id="dataTable" class="table table-hover table-bordered mt-3">
+          <thead class="text-white">
+         
+            <tr>
+              <th class="sticky">Delete</th>
+              <th class="sticky sticky-2">NIK</th>
+              <th class="sticky sticky-3">Employee Name</th>
+              <th>Child Name</th>  
+              <th class="nilai-header">N01</th>
+              <th class="nilai-header">N02</th>
+              <th class="nilai-header">N03</th>
+              <th class="nilai-header">N04</th>
+              <th class="nilai-header">N05</th>
+              <th class="nilai-header">N06</th>
+              <th class="nilai-header">N07</th>
+              <th class="nilai-header">N08</th>
+              <th class="nilai-header">N09</th>
+              <th class="nilai-header">N10</th>
+              <th class="nilai-header">N11</th>
+              <th class="nilai-header">N12</th>
+              <th class="nilai-header">N13</th>
+              <th class="nilai-header">N14</th>
+              <th class="nilai-header">N15</th>
+              <th class="nilai-header">N16</th>
+              <th class="nilai-header">N17</th>
+              <th class="nilai-header">N18</th>
+              <th class="nilai-header">N19</th>
+              <th class="nilai-header">N20</th>
+              <th class="nilai-header">N21</th>
+              <th class="nilai-header">N22</th>
+              <th class="nilai-header">N23</th>
+              <th class="nilai-header">N24</th>
+              <th class="nilai-header">N25</th>
+              <th>Nilai Rata-Rata</th>
+              <th>Nilai Akademik</th>
+           
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Baris pertama -->
+            <tr>
+              <td class="sticky dilet" rowspan="2" >
+                <span class="hapuss">
+                  <button
+                    type="button"
+                    class="hapus"
+                    onclick="erorku()"
+                  >
+                   <span class="trash">  <i class="fas fa-trash"></i></span> 
+                  </button></span
+                >
+              </td>
+              <!-- Input NIK untuk Pencarian -->
+              <td class="sticky sticky-2" rowspan="2">
+                <input
+                  type="text"
+                  class="nik"
+                  placeholder="Masukkan NIK"
+                  oninput="cariKaryawan(this)"
+                  size="12"
+                 
+                 
+                />
+              </td>
+
+              <!-- Data Karyawan -->
+              <td class="sticky sticky-3" rowspan="2">
+                <input type="text" class="Employee_Name" readonly size="23" />
+              </td>
+              
+
+              <!-- Data Anak -->
+              <td rowspan="2">
+                <select class="child_name" >
+                  <option value="">Pilih Anak</option>
+                </select>
+              </td>
+             
+              <td class="nilai-cell n1"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n2"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n3"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n4"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n5"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n6"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n7"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n8"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n9"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n10"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n11"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n12"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n13"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n14"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n15"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n16"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n17"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n18"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n19"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n20"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n21"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n22"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n23"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n24"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n25"><input type="text" maxlength="3" ></td>
+              <td >
+                <input
+                  type="number"
+                  class="nilaiRata1"
+                  size="6"
+                  step="0.01"
+             
+                  min="0"
+                  max="100"
+                  readonly
+                />
+              </td>
+             
+              <td rowspan="2">
+                <input type="text" class="nilaiAkademik" size="6" readonly />
+              </td>
+            </tr>
+           <tr>
+         
+                  
+          <td class="nilai-cell n1+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n2+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n3+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n4+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n5+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n6+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n7+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n8+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n9+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n10+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n11+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n12+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n13+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n14+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n15+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n16+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n17+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n18+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n19+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n20+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n21+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n22+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n23+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n24+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n25+"><input type="text" maxlength="3" ></td>
+          <td >
+            <input
+              type="number"
+              class="nilaiRata2"
+              size="6"
+              step="0.01"
+            
+              min="0"
+              max="100"
+              readonly
+            />
+          </td></tr>
+
+            
+          </tbody>
+        </table>
+  
+        
+      </form>
+    </div>
+    </div>
+
+    <script>
+        function erorku(){
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top-center",
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              }
+            });
+            Toast.fire({
+              icon: "error",
+              title: "Baris Pertama Tidak Dapat Dihapus"
+            });
+          }
+      // Fungsi untuk menghitung rata-rata dari N01-N20
+function hitungRataRata(row) {
+    const nilaiInputs = row.querySelectorAll('.nilai-cell input');
+    let total = 0;
+    let count = 0;
+    
+    nilaiInputs.forEach(input => {
+        const value = parseFloat(input.value);
+        if (!isNaN(value) && value >= 0) {
+            total += value;
+            count++;
+        }
+    });
+    
+    return count > 0 ? (total / count).toFixed(2) : 0;
+}
+
+// Fungsi untuk menghitung dan mengupdate semua nilai
+function updateNilai(row) {
+    const mainRow = row.closest("tr");
+    const rowspanCell = mainRow.querySelector('td[rowspan="2"]');
+    
+    if (rowspanCell) {
+        // Ini baris pertama (dengan rowspan)
+        const nextRow = mainRow.nextElementSibling;
+        if (nextRow) {
+            // Hitung rata-rata untuk baris pertama
+            const rataRata1 = hitungRataRata(mainRow);
+            mainRow.querySelector(".nilaiRata1").value = rataRata1;
+            
+            // Hitung rata-rata untuk baris kedua
+            const rataRata2 = hitungRataRata(nextRow);
+            nextRow.querySelector(".nilaiRata2").value = rataRata2;
+            
+            // Hitung nilai akademik
+            const nilaiAkademik = ((parseFloat(rataRata1) + parseFloat(rataRata2)) / 2).toFixed(2);
+            mainRow.querySelector(".nilaiAkademik").value = parseFloat(nilaiAkademik);
+        }
+    } else {
+        // Ini baris kedua (tanpa rowspan)
+        const prevRow = mainRow.previousElementSibling;
+        if (prevRow && prevRow.querySelector('td[rowspan="2"]')) {
+            // Hitung rata-rata untuk baris pertama
+            const rataRata1 = hitungRataRata(prevRow);
+            prevRow.querySelector(".nilaiRata1").value = rataRata1;
+            
+            // Hitung rata-rata untuk baris kedua
+            const rataRata2 = hitungRataRata(mainRow);
+            mainRow.querySelector(".nilaiRata2").value = rataRata2;
+            
+            // Hitung nilai akademik
+            const nilaiAkademik = ((parseFloat(rataRata1) + parseFloat(rataRata2)) / 2).toFixed(2);
+            prevRow.querySelector(".nilaiAkademik").value = parseFloat(nilaiAkademik);
+        }
+    }
+}
+
+// Event listener untuk input nilai
+document.addEventListener('input', function(e) {
+    if (e.target.matches('.nilai-cell input')) {
+        // Validasi input (0-100)
+        const value = parseFloat(e.target.value);
+        if (!isNaN(value)) {
+            if (value < 0) e.target.value = 0;
+            if (value > 100) e.target.value = 100;
+        }
+        
+        // Update perhitungan
+        updateNilai(e.target);
+    }
+});
+
+      // Data anak yang diambil dari API (untuk setiap baris)
+      let anakData = [];
+
+  
+      // Fungsi untuk mengupdate range input berdasarkan education level
+      function updateNilaiRange(row) {
+        const educationLevel = row.querySelector(".educationlevel").value;
+        const nilaiRata1 = row.querySelector(".nilaiRata1");
+        const nilaiRata2 = row.querySelector(".nilaiRata2");
+
+        if (educationLevel === "SLTA") {
+          nilaiRata1.min = 8.0;
+          nilaiRata1.max = 10.0;
+          nilaiRata2.min = 8.0;
+          nilaiRata2.max = 10.0;
+        } else if (educationLevel === "Universitas") {
+          nilaiRata1.min = 3.25;
+          nilaiRata1.max = 4.0;
+          nilaiRata2.min = 3.25;
+          nilaiRata2.max = 4.0;
+        }
+      }
+
+      // Fungsi untuk memvalidasi input nilai berdasarkan education level
+      function validateNilai(input)                                     {
+        const row = input.closest("tr");
+        const educationLevel = row.querySelector(".educationlevel").value;
+        const nilai = parseFloat(input.value);
+
+        if (isNaN(nilai)) {
+          input.value = ""; // Kosongkan input jika nilai tidak valid
+          return;
+        }
+
+        if (educationLevel === "SLTA") {
+          if (nilai < 8.0 || nilai > 10.0) {
+            alert("Nilai untuk SLTA harus berada dalam range 8.0 sampai 10.0");
+            input.value = ""; // Kosongkan input jika nilai tidak valid
+          }
+        } else if (educationLevel === "Universitas") {
+          if (nilai < 3.25 || nilai > 4.0) {
+            alert(
+              "Nilai untuk Universitas harus berada dalam range 3.25 sampai 4.0"
+            );
+            input.value = ""; // Kosongkan input jika nilai tidak valid
+          }
+        }
+      }
+
+    // Fungsi untuk menambahkan baris baru ke tabel
+    function tambahBaris() {
+    const table = document.getElementById("dataTable").getElementsByTagName("tbody")[0];
+    
+    // Create the main row (rowspan=2)
+    const newRow1 = table.insertRow();
+    newRow1.innerHTML = `
+        <td class="sticky dilet" rowspan="2">
+            <span class="hapuss">
+                <button type="button" class="hapus" onclick="hapusBaris(this)">
+                    <span class="trash"><i class="fas fa-trash"></i></span>
+                </button>
+            </span>
+        </td>
+        <td class="sticky sticky-2" rowspan="2">
+            <input type="text" class="nik" placeholder="Masukkan NIK" oninput="cariKaryawan(this)" size="12"  />
+        </td>
+        <td class="sticky sticky-3" rowspan="2">
+            <input type="text" class="Employee_Name" readonly size="23" />
+        </td>
+        <td rowspan="2">
+            <select class="child_name">
+                <option value="">Pilih Anak</option>
+            </select>
+        </td>
+      
+                
+              <td class="nilai-cell n1"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n2"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n3"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n4"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n5"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n6"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n7"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n8"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n9"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n10"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n11"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n12"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n13"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n14"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n15"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n16"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n17"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n18"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n19"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n20"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n21"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n22"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n23"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n24"><input type="text" maxlength="3" ></td>
+              <td class="nilai-cell n25"><input type="text" maxlength="3" ></td>
+        <td>
+            <input type="number" class="nilaiRata1" size="6" step="0.01"  min="0" max="100" />
+        </td>
+        <td rowspan="2">
+            <input type="number" class="nilaiAkademik" size="6" readonly />
+        </td>
+    `;
+
+    // Create the second row (part of the same entry)
+    const newRow2 = table.insertRow();
+    newRow2.innerHTML = `
+      
+               
+          <td class="nilai-cell n1+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n2+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n3+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n4+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n5+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n6+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n7+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n8+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n9+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n10+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n11+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n12+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n13+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n14+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n15+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n16+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n17+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n18+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n19+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n20+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n21+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n22+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n23+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n24+"><input type="text" maxlength="3" ></td>
+          <td class="nilai-cell n25+"><input type="text" maxlength="3" ></td>
+        <td>
+            <input type="number" class="nilaiRata2" size="6" step="0.01"  min="0" max="100" />
+        </td>
+    `;
+
+    // Add event listeners to the new rows
+    newRow1.querySelector(".child_name").addEventListener("change", (event) => {
+        handleChildSelection(event);
+    });
+
+    newRow1.querySelector(".nik").addEventListener("input", (event) => {
+        cariKaryawan(event.target);
+    });
+
+    newRow1.querySelector(".nilaiRata1").addEventListener("input", (event) => {
+        hitungNilaiAkademik(event.target);
+    });
+
+    newRow2.querySelector(".nilaiRata2").addEventListener("input", (event) => {
+        hitungNilaiAkademik(event.target);
+    });
+
+    newRow1.querySelectorAll('.nilai-cell input').forEach(input => {
+        input.addEventListener('input', function(e) {
+            updateNilai(e.target);
+        });
+    });
+    
+    newRow2.querySelectorAll('.nilai-cell input').forEach(input => {
+        input.addEventListener('input', function(e) {
+            updateNilai(e.target);
+        });
+    });
+    }
+
+     // Fungsi untuk menghapus baris
+    function hapusBaris(button) {
+    const row = button.closest("tr");
+    
+    // Cari semua baris yang terkait (baik rowspan utama maupun baris kedua)
+    let rowsToDelete = [];
+    
+    // Jika ini baris dengan rowspan (baris utama)
+    if (row.querySelector('td[rowspan="2"]')) {
+        rowsToDelete.push(row);
+        // Cari baris berikutnya (baris kedua)
+        const nextRow = row.nextElementSibling;
+        if (nextRow) {
+            rowsToDelete.push(nextRow);
+        }
+    } 
+    // Jika ini baris kedua (tanpa rowspan)
+    else {
+        // Cari baris sebelumnya yang memiliki rowspan
+        let prevRow = row.previousElementSibling;
+        while (prevRow) {
+            if (prevRow.querySelector('td[rowspan="2"]')) {
+                rowsToDelete.push(prevRow);
+                rowsToDelete.push(row);
+                break;
+            }
+            prevRow = prevRow.previousElementSibling;
+        }
+    }
+    
+    // Hapus semua baris yang terkait
+    rowsToDelete.forEach(row => {
+        if (row && row.parentNode) {
+            row.remove();
+        }
+    });
+    }
+     
+      // Fungsi untuk mengambil data anak dari database dan mengisi dropdown
+      async function getChildren(nik, row) {
+        try {
+          const response = await fetch(
+            `http://10.35.2.200:5001/api/anaknilai?nik=${nik}`
+          );
+          const text = await response.text();
+          const data = JSON.parse(text);
+
+          anakData = data;
+
+          const dropdown = row.querySelector(".child_name");
+          dropdown.innerHTML = '<option value="">Pilih Anak</option>';
+
+          if (Array.isArray(data)) {
+            data.forEach((child) => {
+              const option = document.createElement("option");
+              option.value = child.Child_Name;
+              option.textContent = child.Child_Name;
+              dropdown.appendChild(option);
+            });
+          } else {
+            console.warn("Data anak tidak ditemukan atau format tidak valid.");
+          }
+        } catch (error) {
+          console.error("Error Fetch API:", error);
+          alert("Terjadi kesalahan saat mengambil data anak.");
+        }
+      }
+
+      // Fungsi untuk mencari data karyawan berdasarkan NIK
+      async function cariKaryawan(input) {
+        const nik = input.value.trim();
+        const row = input.closest("tr");
+
+        try {
+          const response = await fetch(
+            `http://10.35.2.200:5001/api/karyawannilai?nik=${nik}`
+          );
+          const text = await response.text();
+          const data = JSON.parse(text);
+
+          if (data.length > 0) {
+            const karyawan = data[0];
+
+            row.querySelector(".Employee_Name").value =
+              karyawan.Employee_Name || "";
+         
+        
+      
+           
+      
+
+            await getChildren(nik, row);
+          }
+        } catch (error) {
+          console.error("Error Fetch API:", error);
+          alert("Terjadi kesalahan saat mengambil data dari server.");
+        }
+      }
+
+      // Fungsi untuk menangani pemilihan anak dari dropdown
+      function handleChildSelection(event) {
+        const selectedChildName = event.target.value;
+        const row = event.target.closest("tr");
+
+        const selectedChild = anakData.find(
+          (child) => child.Child_Name === selectedChildName
+        );
+      }
+
+      // Event listener untuk baris pertama saat halaman dimuat
+      // buat fitur input jurusan dan education name diketik langsung muncul dropdown sesuai nama nya dengan data list daftar yang ada di database
+      document.addEventListener("DOMContentLoaded", function () {
+        const firstRow = document.querySelector("#dataTable tbody tr");
+        if (firstRow) {
+          firstRow
+            .querySelector(".child_name")
+            .addEventListener("change", (event) => {
+              handleChildSelection(event);
+            });
+
+          firstRow.querySelector(".nik").addEventListener("input", (event) => {
+            cariKaryawan(event.target);
+          });
+
+       
+
+          // Tambahkan event listener untuk input Nilai Rata-Rata 1 dan 2 pada baris pertama
+          firstRow
+            .querySelector(".nilaiRata1")
+            .addEventListener("input", (event) => {
+              hitungNilaiAkademik(event.target);
+            });
+
+          firstRow
+            .querySelector(".nilaiRata2")
+            .addEventListener("input", (event) => {
+              hitungNilaiAkademik(event.target);
+            });
+        }
+      });
+
+      // Fungsi untuk mengirim nilai akademik ke database
+    async function submitForm() {
+    const rows = document.querySelectorAll("#dataTable tbody tr");
+    const academicData = [];
+    const dataNilaiPelajaran = [];
+
+    // Proses setiap pasangan baris (2 baris per entri)
+    for (let i = 0; i < rows.length; i += 2) {
+        const row1 = rows[i];
+        const row2 = rows[i + 1];
+        
+        if (!row1 || !row2) continue;
+
+        // Ambil data kunci (NIK dan Nama Anak)
+        const nik = row1.querySelector(".nik").value;
+        const childName = row1.querySelector(".child_name").value;
+        const nilaiRata1Input = row1.querySelector(".nilaiRata1");
+        const nilaiRata2Input = row2.querySelector(".nilaiRata2");
+        const nilai1 = row1.querySelector(".nilai1");
+        const nilai1_plus = row2.querySelector(".nilai1+");
+
+        // Validasi data wajib
+        if (!nik || !childName || childName === "Pilih Anak") {
+            Swal.fire({
+                title: 'Data tidak lengkap!',
+                html: '<h6 style="color:red">Harap isi NIK dan Pilih Anak dengan benar!</h6>',
+                icon: 'error'
+            });
+            return;
+        }
+
+        // Ambil nilai akademik yang sudah dihitung
+      
+        const nilaiAkademik = row1.querySelector(".nilaiAkademik").value;
+       
+        const ratarata1 = nilaiRata1Input ? nilaiRata1Input.value : "0";
+        const ratarata2 = nilaiRata2Input ? nilaiRata2Input.value : "0";
+  
+   
+        // Siapkan data untuk dikirim (hanya yang diperlukan)
+        academicData.push({
+            NIK: nik,
+            Child_Name: childName, 
+            Nilai_Rata_Rata_1: ratarata1,
+            Nilai_Rata_Rata_2: ratarata2,
+            Nilai_Akademik: nilaiAkademik,
+        });
+
+        dataNilaiPelajaran.push({
+          NIK:nik,
+          Child_Name:childName,
+          Nilai1:nilai1,
+          Nilai11:nilai1_plus,
+        });
+    }
+
+    if (academicData.length === 0 || dataNilaiPelajaran === 0) {
+        Swal.fire({
+            title: 'Tidak ada data',
+            text: 'Tidak ada data nilai akademik yang akan dikirim',
+            icon: 'warning'
+        });
+        return;
+    }
+
+    try {
+        // Tampilkan loading
+        Swal.fire({
+            title: 'Menyimpan data...',
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading()
+        });
+
+        const apiUrlAkademik = "http://10.35.2.200:5001/api/update-academic-scores";
+        const payload = {
+            updates: academicData,
+            update_type: "academic_only"
+        };
+
+        const apiUrlNilai = "http://10.35.2.200:5001/api/update-nilai-pelajaran";
+        const payloadNilai = {
+            updates: dataNilaiPelajaran,
+            update_type: "nilai_only"
+        };
+        console.log("Data yang dikirim:", payload,payloadNilai); // Debug log
+
+        const [academicResponse ,DatanilaiResponse] = await Promise.all([
+        fetch(apiUrlAkademik,{
+          method : "POST",
+          headers : {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem('token')}`   
+          },
+          body :JSON.stringify(payload)
+        }
+            
+        )]
+        )
+
+
+        const response = await fetch(apiUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem('token')}` // Jika menggunakan auth
+            },
+            body: JSON.stringify(payload)
+        });
+
+        // Debugging: Cek response sebelum processing
+        const responseText = await response.text();
+        console.log("Raw response:", responseText);
+
+        if (!response.ok) {
+            // Coba parse error message
+            let errorMsg = response.statusText;
+            try {
+                const errorJson = JSON.parse(responseText);
+                errorMsg = errorJson.message || errorText;
+            } catch (e) {
+                errorMsg = responseText.includes("<!DOCTYPE") ? 
+                    "Terjadi kesalahan pada server" : 
+                    responseText.substring(0, 100);
+            }
+            throw new Error(errorMsg);
+        }
+
+        const result = JSON.parse(responseText);
+        
+        Swal.fire({
+            title: 'Sukses!',
+            text: result.message || 'Nilai akademik berhasil disimpan',
+            icon: 'success'
+        });
+        
+    } catch (error) {
+        console.error("Error details:", error);
+        
+        let errorMessage = "Terjadi kesalahan saat menyimpan data";
+        if (error.message.includes("Failed to fetch")) {
+            errorMessage = "Tidak dapat terhubung ke server";
+        } else if (error.message.includes("<!DOCTYPE")) {
+            errorMessage = "Terjadi kesalahan pada server";
+        } else {
+            errorMessage = error.message;
+        }
+
+        Swal.fire({
+            title: 'Gagal!',
+            html: `<div>${errorMessage}</div>
+                  <small>Silakan cek konsol untuk detail error</small>`,
+            icon: 'error'
+        });
+    }
+}
+
+// Fungsi konfirmasi pengiriman
+function confirmSubmit() {
+    Swal.fire({
+        title: "Input Nilai Akademik?",
+        html: `
+            <div>Anda akan input nilai akademik SLTA berdasarkan:</div>
+            <ul style="text-align:left;margin:10px 0">
+                <li>NIK Karyawan</li>
+                <li>Nama Anak</li>
+        
+            </ul>
+            <div style="color:red;font-weight:bold">
+                * Hanya Nilai Akademik SLTA Pada Beasiswa List Yang Telah Diinput yang akan diupdate
+            </div>
+        `,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Ya, Posting",
+        cancelButtonText: "Batal"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            submitForm();
+        }
+    });
+}
+
+      // Fungsi untuk mengirim data form
+    </script>
+    <script type="module">
+      import { protectPage } from './auth.js';
+      import { logout } from './auth.js';
+      document.addEventListener('DOMContentLoaded', async () => {
+          const auth = await protectPage();
+          const namauser = document.getElementById("namauser");
+          namauser.innerHTML = auth.user.full_name;
+          if (auth.authenticated) {
+              // User is authenticated, you can access auth.user
+              console.log('User:', auth.user);
+              
+              document.getElementById('logoutButton').addEventListener('click', async (e) => {
+                e.preventDefault();
+                await logout();
+              });
+          }
+      });
+  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+  </body>
+</html>

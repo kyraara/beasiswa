@@ -1,0 +1,2153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Beasiswa</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+    />
+    <!-- Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+
+    <!-- Bootstrap -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    />
+
+    <!-- Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx-style@0.8.13/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+      * {
+        font-family: "Ubuntu", sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      a {
+        color: white;
+      }
+      body {
+        background-color: #f8f9fa;
+      }
+
+      
+      .table-container tr {
+        background: white;
+      }
+      /* Table Styles */
+      .table-container {
+        background: rgb(235, 230, 164);
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 10px;
+        margin: 10px;
+        overflow-x: auto;
+        height: 490px !important;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 11px;
+        
+      }
+
+      td {
+        border: 1px solid #76afe4;
+        padding: 0px 4px;
+        height: 1px !important;
+        text-align: left;
+        vertical-align: middle;
+        white-space: nowrap !important;
+      }
+
+      th {
+        white-space: nowrap;
+        background-color: #0787ff;
+        color: white;
+        padding: 2px;
+        text-align: center !important;
+        border: 1px solid #76afe4;
+      }
+
+      tr:nth-child(even) {
+        background-color: #d2d6da;
+      }
+
+     
+
+      /* Eligibility Styles */
+      .not-eligible {
+        background-color: #d18e8e !important;
+        color: red !important;
+      }
+      /* Tambahkan di bagian style */
+      .eligible-status {
+        font-weight: bold;
+        padding: 4px 8px;
+        border-radius: 4px;
+        text-align: center;
+      }
+
+      .eligible-yes {
+        background-color: #d4edda;
+        color: #155724;
+      }
+
+      .eligible-no {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+      .eligible {
+        background-color: #d4edda !important;
+        color: #155724 !important;
+      }
+
+      /* Header Styles */
+      .header {
+    
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 3px 20px;
+        background-color: #212529;
+        color: white;
+      }
+
+      .header h1 {
+        margin: 0;
+        font-size: 1rem;
+      }
+
+      /* Button Styles */
+      .action-buttons {
+        display: flex;
+        gap: 10px;
+        margin: 5px 20px 0px;
+     
+      }
+
+      .action-buttons .btn {
+        padding: 6px;
+        font-size: 13px;
+      }
+
+      .filter-actions .btn {
+        padding: 6px;
+        font-size: 13px;
+      }
+
+      .btn {
+        padding: 5px 8px;
+        border-radius: 5px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 5px;
+        margin-bottom: 3px;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+    
+
+      .btn-back {
+        background-color: #ffc107;
+        color: #212529;
+        border: none;
+      }
+
+      .btn-params {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+      }
+
+      .btn-logout {
+        background-color: #c22626;
+        color: white;
+        border: none;
+      }
+      .btn-logout:hover {
+        background-color: red;
+      }
+      /* Filter Styles */
+      .filter-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin: 0 10px;
+        padding: 5px;
+        background-color: rgb(177, 211, 230);
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .filter-group {
+        display: flex;
+        flex-direction: column;
+        min-width: 180px;
+        margin-left: 5px;
+      }
+
+      .filter-group label {
+        font-weight: bold;
+        font-size: 14px;
+      }
+
+      .filter-control {
+        padding: 5px 8px;
+        border: 1px solid #ced4da;
+        border-radius: 7px;
+        font-size: 14px;
+      }
+
+      .filter-actions {
+        display: flex;
+        gap: 10px;
+        align-self: flex-end;
+        margin-top: 14px;
+      }
+
+      /* Modal Styles */
+      .modal-content {
+        border-radius: 10px;
+      }
+
+      .modal-header {
+        background-color: rgb(40, 190, 40);
+        color: black;
+        border-bottom: none;
+        border-radius: 10px 10px 0 0;
+      }
+
+      .modal-title {
+        font-weight: 700;
+      }
+
+      .modal-body {
+        max-height: 70vh;
+        overflow-y: auto;
+      }
+
+      /* Responsive Adjustments */
+      @media (max-width: 768px) {
+        .header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+        }
+
+        .action-buttons {
+          flex-wrap: wrap;
+        }
+
+        .filter-group {
+          min-width: 100%;
+        }
+      }
+
+      /* Scrollbar Styles */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+
+      /* Fixed Header for Table */
+      .table-wrapper {
+        max-height: 600px;
+        
+      }
+
+
+
+      /* Sort Indicator */
+      .sortable-header {
+        cursor: pointer;
+        position: relative;
+        padding-right: 20px;
+      }
+
+      .sortable-header:hover {
+        background-color: #0069d9;
+      }
+
+      .sortable-header::after {
+        content: "";
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        opacity: 0.6;
+      }
+
+      .sortable-header.asc::after {
+        border-bottom: 5px solid white;
+      }
+
+      .sortable-header.desc::after {
+        border-top: 5px solid white;
+      }
+
+      /* Loading Indicator */
+      .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      }
+
+      .spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid #007bff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      .view,
+      .rubah,
+      .hilang {
+        background-color: white !important;
+        
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .form-label {
+        font-weight: bold;
+      }
+
+      .form-control {
+        background-color: rgb(190, 238, 186);
+      }
+      .showi {
+        background-color: white;
+        border: solid 1px white;
+        position: relative;
+        padding: 2px;
+        margin-right: 1px;
+      }
+      .hiddeni {
+        background-color: white;
+        border: solid 1px white;
+        position: relative;
+        padding: 2px;
+        margin-top: 2px;
+        margin-left: 2px;
+      }
+
+      .bg-light {
+        background-color: rgb(240, 202, 202) !important;
+      }
+
+      .btn1 {
+        padding:5px;
+        border-radius: 5px;
+        font-size: 12px;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 2px;
+        height: 35px;
+        margin-top: 5px;
+        
+      }
+
+      .btn1:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .nilaisma {
+        margin-left: 1px;
+        background-color: #c22626;
+        padding: 4px;
+        color: white;
+        border: none;
+      }
+      .nilaisma:hover {
+        transform: translateY(-2px);
+      }
+      a {
+        text-decoration: none;
+      }
+      .inputext {
+        font-size: 14px;
+      }
+      .bi {
+        padding-right: 4px;
+        padding-left: 4px;
+      }
+      .navbar-nav li {
+        margin-right: 5px;
+        margin-left: 5px;
+      }
+      .navbar-nav li.active {
+        border-bottom: 3px solid #007bff;
+      }
+      .navbar-nav li:hover {
+        border-bottom: 3px solid #007bff;
+      }
+      .navbar-nav .fass:hover{
+        border-bottom: 3px solid crimson;
+      }
+
+      .selected {
+        background-color: #5390e0 !important;
+      }
+    /* Preview Modal Styles */
+#previewModal .modal-xl {
+  max-width: 90%;
+}
+
+#previewModal .modal-body {
+  min-height: 70vh;
+  padding: 0;
+}
+
+.preview-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+}
+.btn-edit{
+  background-color: rgb(40, 190, 40);
+}
+
+.btn-edit:hover{
+  background-color: rgb(101, 218, 101);
+}
+.preview-error {
+  color: #dc3545;
+  text-align: center;
+  padding: 20px;
+}
+
+#resetFilter{
+  margin-top: 6px!important;
+  height: 30px;
+}
+
+#exportBtn{
+  margin-top: 6px!important;
+  height: 30px;
+}
+
+#applyFilter{
+  margin-top: 6px!important;
+  height: 30px;
+}
+    </style>
+  </head>
+
+  <body>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+      <div class="d-flex align-items-center">
+     
+        <h1>Data Beasiswa</h1>
+      </div>
+      <nav>
+        <ul class="navbar-nav ms-auto d-flex flex-row">
+          <li>
+            <a href="/input">
+              <i class="bi bi-pencil-square"></i>
+              <span>Form Input</span>
+            </a>
+          </li>
+
+          <li class=>
+            <a href="/nilaisma">
+              <i class="bi bi-journal-bookmark"></i>
+              <span>Input Nilai</span>
+            </a>
+          </li>
+          <li class="active">
+            <a href="/uploadoc">
+              <i class="bi bi-file-earmark-arrow-up"></i>
+              <span>Upload Berkas</span>
+            </a>
+          </li>
+          <li >
+            <a href="/beasiswa">
+              <i class="bi bi-award"></i>
+              <span>Beasiswa List</span>
+            </a>
+          </li>
+          <li>
+            <a href="/users">
+              <i class="bi bi-people"></i>
+              <span>Management</span>
+            </a>
+          </li>
+          <li class="fass">
+            <a href="/logout" id="logoutButton" style="color: crimson">
+              <i class="fas fa-sign-out-alt"></i>
+              <span style="margin-left: 13px"> Logout</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        
+       
+        <div id="parameternilai" style="display: none">
+          <a href="/parameternilai" class="btn1 btn-params">
+            <i class="fas fa-calculator me-1"></i> Parameter Penilaian
+          </a>
+        </div>
+      </div>
+
+      <!-- Filter Controls -->
+      <div class="filter-container">
+        <div class="filter-group">
+          <label for="nameFilter">Nama Orang Tua</label>
+          <input
+            type="text"
+            id="nameFilter"
+            class="filter-control"
+            placeholder="Cari nama..."
+          />
+        </div>
+        <div class="filter-group">
+          <label for="periodeFilter">Periode</label>
+          <select id="periodeFilter" class="filter-control">
+            <option value="">Semua Periode</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="educationFilter">Jenjang Pendidikan</label>
+          <select id="educationFilter" class="filter-control">
+            <option value="">Semua Jenjang</option>
+            <option value="SLTA">SLTA</option>
+            <option value="Universitas">Universitas</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="eligibleFilter">Status Kelayakan</label>
+          <select id="eligibleFilter" class="filter-control">
+            <option value="">Semua Status</option>
+            <option value="Yes">Eligible</option>
+            <option value="No">Not Eligible</option>
+          </select>
+        </div>
+        <div class="filter-group" style="display: none">
+          <label for="paFilter">Performance Appraisal</label>
+          <select id="paFilter" class="filter-control">
+            <option value="">Semua PA</option>
+            <option value="ME">ME</option>
+            <option value="ME+">ME+</option>
+            <option value="ME-">ME-</option>
+            <option value="AE">AE</option>
+            <option value="NI">NI</option>
+          </select>
+        </div>
+        <div class="filter-actions">
+          <button id="applyFilter" class="btn btn-primary">
+            <i class="fas fa-filter me-1"></i> Filter
+          </button>
+          <button id="resetFilter" class="btn btn-secondary">
+            <i class="fas fa-undo me-1"></i> Reset
+          </button>
+       
+        </div>
+      </div>
+
+      <!-- Data Table -->
+      <div class="table-container">
+        <div class="table-wrapper">
+          <table id="dataTable">
+            <thead>
+              <tr>
+                <th colspan="3" class="text-center text-white" style="background-color: #0787ff;">
+                  Data Orang Tua
+                </th>
+                <th colspan="1" class="text-center  text-white" style="background-color: #0787ff;">
+                  Data Anak
+                </th>
+               
+               
+
+           
+               <th colspan="2">Status</th>
+                <th colspan="3" class="text-center  text-white action-column" style="background-color: #0787ff;">
+                  Action
+                </th>
+              </tr>
+              <tr>
+                <!-- Data Karyawan -->
+           
+                <th class="sortable-header" data-column="NIK">ID</th>
+                <th class="sortable-header" data-column="Employee_Name">
+                  Parent Name
+                </th>
+               
+                <th class="sortable-header" data-column="Org_Group_Code">
+                  Org Group Code
+                </th>
+               
+              
+
+                <!-- Data Anak -->
+                <th class="sortable-header" data-column="Child_Name">
+                  Child Name
+                </th>
+              
+                
+      <!-- Pendidikan -->
+      <th class="sortable-header" data-column="Education_Level">
+        Education Level
+      </th>
+              
+
+                <!-- Status -->
+              
+                <th class="sortable-header" data-column="Periode_Tahun">
+                  Periode Tahun
+                </th>
+             
+               
+        
+                <th class="sortable-header" data-column="Edit">Upload Berkas</th>
+               
+               
+              </tr>
+            </thead>
+            <tbody id="tableBody">
+              <!-- Data will be filled by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <!-- Edit Data Modal -->
+    <div
+      class="modal fade"
+      id="editModal"
+      tabindex="-1"
+      aria-labelledby="editModalLabel"
+      aria-hidden="true"
+    >
+    
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Upload Document Validasi</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="editForm" class="row g-3">
+              <!-- Form fields will be filled dynamically -->
+               
+            </form>
+             <!-- Tambahkan bagian ini di dalam modal-body setelah form -->
+              <div class="mt-4">
+                <h5>Dokumen Validasi</h5>
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label">Surat Tidak Menerima Beasiswa Lain</label>
+                    <div class="d-flex">
+                      <input type="file" class="form-control document-upload" data-doc-type="beasiswa_lain" accept=".pdf,.jpg,.jpeg,.png">
+                    
+                    </div>
+                    <div class="document-info" data-doc-type="beasiswa_lain"></div>
+                  </div>
+                  
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label">Surat Tidak Menerima Beasiswa TEL</label>
+                    <div class="d-flex">
+                      <input type="file" class="form-control document-upload" data-doc-type="beasiswa_tel" accept=".pdf,.jpg,.jpeg,.png">
+                   
+                    </div>
+                    <div class="document-info" data-doc-type="beasiswa_tel"></div>
+                  </div>
+                  
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label">Surat Tanggungan Pekerja</label>
+                    <div class="d-flex">
+                      <input type="file" class="form-control document-upload" data-doc-type="tanggungan" accept=".pdf,.jpg,.jpeg,.png">
+                   
+                    </div>
+                    <div class="document-info" data-doc-type="tanggungan"></div>
+                  </div>
+                  
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label">Surat Keterangan Masih Sekolah</label>
+                    <div class="d-flex">
+                      <input type="file" class="form-control document-upload" data-doc-type="sekolah" accept=".pdf,.jpg,.jpeg,.png">
+                    
+                    </div>
+                    <div class="document-info" data-doc-type="sekolah"></div>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label">Nilai Akademik</label>
+                    <div class="d-flex">
+                      <input type="file" class="form-control document-upload" data-doc-type="NilaiRapot" accept=".pdf,.jpg,.jpeg,.png">
+                    
+                    </div>
+                    <div class="document-info" data-doc-type="NilaiRapot"></div>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+    
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                <i class="fas fa-times me-1"></i> Batal
+              </button>
+              <button type="button" class="btn" id="saveChangesBtn" style="background-color: rgb(40, 190, 40);">
+                <i class="fas fa-save me-1"></i> Simpan Perubahan
+              </button>
+            </div>
+          </div>
+          
+         
+        </div>
+      </div>
+    </div>
+
+    <!-- View Details Modal -->
+    <div
+      class="modal fade"
+      id="viewModal"
+      tabindex="-1"
+      aria-labelledby="viewModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button class="showi" onclick="showNilai()"></button>
+
+            <h5 class="modal-title">Detail Data Beasiswa</h5>
+            <button class="hiddeni" onclick="HiddenNilai()"></button>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body" id="viewModalBody">
+            <!-- Details will be filled dynamically -->
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              <i class="fas fa-times me-1"></i> Tutup
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+        <!-- Preview Document Modal -->
+        <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="previewModalLabel">Preview Dokumen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div id="pdf-preview" style="display: none;">
+                  <iframe id="pdf-viewer" style="width: 100%; height: 70vh; border: none;"></iframe>
+                </div>
+                <div id="image-preview" style="display: none; text-align: center;">
+                  <img id="image-viewer" style="max-width: 100%; max-height: 70vh;" class="img-fluid">
+                </div>
+                <div id="unsupported-preview" style="display: none;">
+                  <div class="alert alert-warning">
+                    <h5>Preview tidak tersedia untuk jenis file ini</h5>
+                    <p>Silakan download file untuk melihat isinya.</p>
+                    <button id="download-btn" class="btn btn-primary">
+                      <i class="fas fa-download"></i> Download Dokumen
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                  <i class="fas fa-times"></i> Tutup
+                </button>
+               
+              </div>
+            </div>
+          </div>
+        </div>
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+      function showNilai() {
+        const parameterNilai = document.getElementById("parameternilai");
+        parameterNilai.style.display = "block";
+      }
+      function HiddenNilai() {
+        const parameterNilai = document.getElementById("parameternilai");
+        parameterNilai.style.display = "none";
+      }
+
+      // Main Application
+      $(document).ready(function () {
+        const app = {
+          // Configuration
+          config: {
+            apiBaseUrl: "http://10.35.2.200:5001/api",
+            pageSize: 50,
+            currentPage: 1,
+            sortColumn: "Grand_Total_Score",
+            sortDirection: "desc",
+            filters: {},
+            currentDocuments: [], // Untuk menyimpan dokumen yang sudah diupload
+       
+          },
+
+      
+
+          // Initialize the application
+          init: function () {
+            this.checkAuth();
+            this.bindEvents();
+            this.loadParameterMaps()
+              .then(() => this.loadData())
+              .catch((error) => {
+                console.error("Initialization error:", error);
+                this.showError("Gagal memuat data awal");
+              });
+          },
+
+          // Bind all event listeners
+          bindEvents: function () {
+            // Filter events
+            $("#applyFilter").click(() => this.applyFilters());
+            $("#resetFilter").click(() => this.resetFilters());
+
+
+            // Save changes in modal
+            $("#saveChangesBtn").click(() => this.saveChanges());
+
+            // Sortable headers
+            $(".sortable-header").click((e) => {
+              const column = $(e.currentTarget).data("column");
+              this.sortData(column);
+            });
+
+            // Search on enter key
+            $("#nameFilter").keypress((e) => {
+              if (e.which === 13) this.applyFilters();
+            });
+
+            $("#tableBody").on("click", ".btn-delete", (e) => {
+              const nik = $(e.currentTarget)
+                .closest("tr")
+                .find("td:second")
+                .text();
+              this.deleteData(nik);
+            });
+          },
+          
+
+                     // Check authentication
+       checkAuth:async function() {
+        try {
+          const response = await fetch("/api/check-auth", {
+            credentials: "include",
+          });
+          const data = await response.json();
+
+          if (!data.authenticated) {
+            window.location.href = "/login";
+            return;
+          }
+
+          currentUser = data.user;
+
+          // Hide admin features if not admin
+          if (currentUser.role !== "admin") {
+          
+
+            $('td.action-column').hide(); // Untuk header kolom aksi
+          }
+
+        } catch (error) {
+          console.error("Auth check error:", error);
+    
+        }
+      },
+
+
+          // Show loading overlay
+          showLoading: function (show) {
+            $("#loadingOverlay").toggle(show);
+          },
+
+          // Show error message
+          showError: function (message) {
+            Swal.fire({
+              title: "Error!",
+              text: message,
+              icon: "error",
+              confirmButtonText: "OK",
+            });
+          },
+
+          // Show success message
+          showSuccess: function (message) {
+            Swal.fire({
+              title: "Sukses!",
+              text: message,
+              icon: "success",
+              confirmButtonText: "OK",
+            });
+          },
+
+          // Confirm dialog
+          confirmAction: function (options) {
+            return Swal.fire({
+              title: options.title || "Konfirmasi",
+              html: options.html || "Apakah Anda yakin?",
+              icon: options.icon || "question",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: options.confirmText || "Ya",
+              cancelButtonText: options.cancelText || "Batal",
+            });
+          },
+
+          // Load parameter maps from API
+          loadParameterMaps: function () {
+            this.showLoading(true);
+            return $.ajax({
+              url: `${this.config.apiBaseUrl}/parameternilai`,
+              method: "GET",
+              dataType: "json",
+            })
+              .then((data) => {
+                this.parameterMaps = data;
+              })
+              .fail((error) => {
+                console.error("Error loading parameter maps:", error);
+                this.showError("Gagal memuat parameter penilaian");
+                throw error;
+              })
+              .always(() => {
+                this.showLoading(false);
+              });
+          },
+
+          // Load scholarship data from API
+          loadData: function () {
+            this.showLoading(true);
+            return $.ajax({
+              url: `${this.config.apiBaseUrl}/scholarship`,
+              method: "GET",
+              dataType: "json",
+            })
+              .then((data) => {
+                this.allScholarshipData = data;
+                this.populatePeriodeFilter();
+                this.displayData();
+              })
+              .fail((error) => {
+                console.error("Error loading scholarship data:", error);
+                this.showError("Gagal memuat data beasiswa");
+                throw error;
+              })
+              .always(() => {
+                this.showLoading(false);
+              });
+          },
+
+          // Populate period filter dropdown
+          populatePeriodeFilter: function () {
+            const periodeFilter = $("#periodeFilter");
+            periodeFilter
+              .empty()
+              .append('<option value="">Semua Periode</option>');
+
+            const periods = [
+              ...new Set(
+                this.allScholarshipData
+                  .map((item) => item.Periode_Tahun)
+                  .filter(Boolean)
+              ),
+            ];
+
+            // Sort periods descending (newest first)
+            periods.sort((a, b) => b.localeCompare(a));
+
+            periods.forEach((period) => {
+              periodeFilter.append(
+                `<option value="${period}">${period}</option>`
+              );
+            });
+          },
+
+          // Apply filters to data
+          applyFilters: function () {
+            this.config.filters = {
+              name: $("#nameFilter").val().toLowerCase(),
+              periode: $("#periodeFilter").val(),
+              education: $("#educationFilter").val(),
+              eligible: $("#eligibleFilter").val(),
+              pa: $("#paFilter").val(),
+            };
+
+            this.displayData();
+          },
+
+          // Reset all filters
+          resetFilters: function () {
+            $("#nameFilter").val("");
+            $("#periodeFilter").val("");
+            $("#educationFilter").val("");
+            $("#eligibleFilter").val("");
+            $("#paFilter").val("");
+
+            this.config.filters = {};
+            this.displayData();
+          },
+
+          // Filter data based on current filters
+          getFilteredData: function () {
+            return this.allScholarshipData.filter((item) => {
+              const { name, periode, education, eligible, pa } =
+                this.config.filters;
+
+              const nameMatch =
+                !name ||
+                (item.Employee_Name &&
+                  item.Employee_Name.toLowerCase().includes(name));
+
+              const periodeMatch =
+                !periode ||
+                (item.Periode_Tahun && item.Periode_Tahun === periode);
+
+              const educationMatch =
+                !education ||
+                (item.Education_Level && item.Education_Level === education);
+
+              const eligibleMatch =
+                !eligible || this.checkEligibility(item) === eligible;
+
+              const paMatch =
+                !pa || (item.Employee_PA && item.Employee_PA === pa);
+
+              return (
+                nameMatch &&
+                periodeMatch &&
+                educationMatch &&
+                eligibleMatch &&
+                paMatch
+              );
+            });
+          },
+
+          // Sort data by column
+          sortData: function (column) {
+            // Reset previous sort indicator
+            $(".sortable-header").removeClass("asc desc");
+
+            // If sorting the same column, toggle direction
+            if (this.config.sortColumn === column) {
+              this.config.sortDirection =
+                this.config.sortDirection === "asc" ? "desc" : "asc";
+            } else {
+              this.config.sortColumn = column;
+              // Default to descending for Eligible and Grand_Total_Score, ascending for others
+              this.config.sortDirection =
+                column === "Eligible" || column === "Grand_Total_Score"
+                  ? "desc"
+                  : "asc";
+            }
+
+            // Set new sort indicator
+            $(`[data-column="${column}"]`).addClass(this.config.sortDirection);
+
+            this.displayData();
+          },
+
+          // Display data in table
+          displayData: function () {
+            const filteredData = this.getFilteredData();
+
+            // Sort data with priority to Eligible status
+            const sortedData = [...filteredData].sort((a, b) => {
+              const aValue = a[this.config.sortColumn] || "";
+              const bValue = b[this.config.sortColumn] || "";
+
+              // Special handling for Eligible status
+              if (this.config.sortColumn === "Eligible") {
+                const aEligible = this.checkEligibility(a) === "Yes" ? 1 : 0;
+                const bEligible = this.checkEligibility(b) === "Yes" ? 1 : 0;
+                return this.config.sortDirection === "asc"
+                  ? aEligible - bEligible
+                  : bEligible - aEligible;
+              }
+
+              // Special handling for numeric values
+              if (this.config.sortColumn === "Grand_Total_Score") {
+                const aScore = parseFloat(aValue) || 0;
+                const bScore = parseFloat(bValue) || 0;
+                return this.config.sortDirection === "asc"
+                  ? aScore - bScore
+                  : bScore - aScore;
+              }
+
+              // Default string comparison
+              const comparison = String(aValue).localeCompare(String(bValue));
+              return this.config.sortDirection === "asc"
+                ? comparison
+                : -comparison;
+            });
+
+            // Rest of the displayData function remains the same...
+            const tableBody = $("#tableBody");
+            tableBody.empty();
+
+            if (sortedData.length === 0) {
+              tableBody.append(`
+                    <tr>
+                        <td colspan="36" class="text-center py-4">Tidak ada data yang ditemukan</td>
+                    </tr>
+                `);
+              return;
+            }
+
+            sortedData.forEach((item) => {
+              const grandTotalScore = this.calculateGrandTotalScore(item);
+              const eligibleStatus = this.checkEligibility(item);
+
+              const row = $(`
+                            <tr>
+                              <!-- Data Karyawan -->
+                              
+                              <td>${item.NIK || ""}</td>
+                              <td>${item.Employee_Name || ""}</td>
+                        
+                              <td>${item.Org_Group_Code || ""}</td>
+                         
+
+                              <!-- Data Anak -->
+                              <td>${item.Child_Name || ""}</td>
+                   
+                          
+                              <!-- Pendidikan -->
+                              <td>${item.Education_Level || ""}</td>
+                     
+
+                          
+
+
+
+                              <!-- Status -->
+                         
+                              <td>${item.Periode_Tahun || ""}</td>
+                             
+
+                              <!-- Actions -->
+                          
+                             
+                              <td class="text-center rubah action-column">
+                              <button class="btn btn-sm btn-warning btn-edit " title="Upload">
+                                 <i class="fa-solid fa-upload"></i>
+                                </button>
+                              </td>
+                             
+                             </tr>
+                            `);
+      
+       
+   
+
+
+           
+
+              // Add event handlers
+              row.find(".btn-view").click(() => this.openViewModal(item));
+              row.find(".btn-edit").click(() => this.openEditModal(item));
+              row.find(".btn-delete").click(() => this.deleteData(item.NIK));
+              tableBody.append(row);
+            });
+          },
+
+          
+
+          // Check column eligibility
+          checkColumnEligibility: function (item, cell, columnName) {
+            switch (columnName) {
+              case "Tidak_Menerima_Beasiswa_Lain":
+                if (item.Tidak_Menerima_Beasiswa_Lain !== "Yes") {
+                  cell.addClass("not-eligible");
+                }
+                break;
+              case "Tidak_Menerima_Beasiswa_TEL":
+                if (item.Tidak_Menerima_Beasiswa_TEL !== "Yes") {
+                  cell.addClass("not-eligible");
+                }
+                break;
+              case "Tanggungan_Pekerja":
+                if (item.Tanggungan_Pekerja !== "Yes") {
+                  cell.addClass("not-eligible");
+                }
+                break;
+              case "Surat_Keterangan":
+                if (item.Surat_Keterangan !== "Yes") {
+                  cell.addClass("not-eligible");
+                }
+                break;
+              case "Nilai_Akademik":
+                const nilaiAkademik = parseFloat(item.Nilai_Akademik) || 0;
+                if (item.Education_Level === "SLTA" && nilaiAkademik < 8.0) {
+                  cell.addClass("not-eligible");
+                } else if (
+                  item.Education_Level === "Universitas" &&
+                  nilaiAkademik < 3.25
+                ) {
+                  cell.addClass("not-eligible");
+                }
+                break;
+              case "Employee_PA":
+                if (item.Employee_PA === "ME-" || item.Employee_PA === "NI") {
+                  cell.addClass("not-eligible");
+                }
+                break;
+            }
+          },
+
+          // Check overall eligibility
+          checkEligibility: function (item) {
+            const conditions = [
+              item.Tidak_Menerima_Beasiswa_Lain === "Yes",
+              item.Tidak_Menerima_Beasiswa_TEL === "Yes",
+              item.Tanggungan_Pekerja === "Yes",
+              item.Surat_Keterangan === "Yes",
+            ];
+
+            const allConditionsMet = conditions.every(
+              (condition) => condition === true
+            );
+            const nilaiAkademik = parseFloat(item.Nilai_Akademik) || 0;
+            let nilaiAkademikEligible = false;
+
+            if (item.Education_Level === "SLTA") {
+              nilaiAkademikEligible = nilaiAkademik >= 8.0;
+            } else if (item.Education_Level === "Universitas") {
+              nilaiAkademikEligible = nilaiAkademik >= 3.25;
+            }
+
+            let pakaryawan = true;
+            if (item.Employee_PA === "ME-" || item.Employee_PA === "NI") {
+              pakaryawan = false;
+            }
+
+            return allConditionsMet && nilaiAkademikEligible && pakaryawan
+              ? "Yes"
+              : "No";
+          },
+
+          // Calculate grand total score
+          calculateGrandTotalScore: function (item) {
+            const {
+              Education_Level,
+              Nilai_Akademik,
+              Employee_PA,
+              Grade,
+              Accreditation,
+              Achievement_1,
+              Achievement_2,
+              Achievement_3,
+            } = item;
+
+            // Mengambil Parameter Nilai dari Database
+            const paScore = this.parameterMaps.paScore?.[Employee_PA] || 0;
+            const gradeScore = this.parameterMaps.gradeScore?.[Grade] || 0;
+            const accreditationScore =
+              this.parameterMaps.accreditationScore?.[Accreditation] || 0;
+
+            // Calculate achievement scores
+            const achievements = [
+              Achievement_1,
+              Achievement_2,
+              Achievement_3,
+            ].filter(Boolean);
+            let naaScore = achievements.reduce(
+              (acc, achievement) =>
+                acc + (this.parameterMaps.achievementScore?.[achievement] || 0),
+              0
+            );
+
+            // Rumus Menghitung Nilai Akademik berdasarkan akademik level
+            let aaScore;
+            if (Education_Level === "SLTA") {
+              aaScore = ((Nilai_Akademik * 10) / 10) * 100;
+            } else if (Education_Level === "Universitas") {
+              aaScore = ((Nilai_Akademik * 10) / 4) * 100;
+            } else {
+              aaScore = 0;
+            }
+
+            // Bobot Nilai dari parameter nilai di database
+            const BobotAA = this.parameterMaps.bobot?.AAScoreB || 0.5;
+            const BobotPA = this.parameterMaps.bobot?.PAScoreB || 0.25;
+            const BobotGrade = this.parameterMaps.bobot?.GradeScoreB || 0.25;
+
+            // Rumus Menghitung Grand Total Score
+            const grandTotalScore =
+              (aaScore * BobotAA +
+                paScore * BobotPA +
+                gradeScore * BobotGrade +
+                accreditationScore +
+                naaScore) *
+              10;
+
+            return grandTotalScore.toFixed(0);
+          },
+
+          // Open view modal
+          openViewModal: function (item) {
+            const grandTotalScore = this.calculateGrandTotalScore(item);
+            const eligibleStatus = this.checkEligibility(item);
+
+            const modalContent = `
+                          <div class="row">
+                            <div class="col-md-6">
+                              <h5 class="mb-3">Data Karyawan</h5>
+                              <div class="mb-2">
+                                <strong>NIK:</strong> ${item.NIK || "-"}
+                              </div>
+                              <div class="mb-2">
+                                <strong>Nama:</strong> ${
+                                  item.Employee_Name || "-"
+                                }
+                              </div>
+                              <div class="mb-2">
+                                <strong>No. Telepon:</strong> ${
+                                  item.Phone_Number || "-"
+                                }
+                              </div>
+                              <div class="mb-2">
+                                <strong>Tanggal Masuk:</strong> ${this.formatDate(
+                                  item.Join_Date
+                                )}
+                              </div>
+                              <div class="mb-2">
+                                <strong>Organisasi:</strong> ${
+                                  item.Organization_Name || "-"
+                                } (${item.Org_Group_Code || "-"})
+                              </div>
+                              <div class="mb-2">
+                                <strong>PA:</strong> ${item.Employee_PA || "-"}
+                              </div>
+                              <hr>
+                              <h5 class="mt-4 mb-3">Data Anak</h5>
+                              <div class="mb-2">
+                                <strong>Nama Anak:</strong> ${
+                                  item.Child_Name || "-"
+                                }
+                              </div>
+                              <div class="mb-2">
+                                <strong>No. Telepon Anak:</strong> ${
+                                  item.Child_Phone_Number || "-"
+                                }
+                              </div>
+                              <div class="mb-2">
+                                <strong>Jenis Kelamin:</strong> ${
+                                  item.Gender || "-"
+                                }
+                              </div>
+                              <div class="mb-2">
+                                <strong>Tempat/Tgl Lahir:</strong> ${
+                                  item.Birth_Place || "-"
+                                }, ${this.formatDate(item.Birth_Date)}
+                              </div>
+                              <div class="mb-2">
+                                <strong>Usia:</strong> ${item.Age || "-"}
+                              </div>
+                            </div>
+
+                            <div class="col-md-6">
+                              <h5 class="mb-3">Pendidikan</h5>
+                              <div class="mb-2">
+                                <strong>Jenjang:</strong> ${
+                                  item.Education_Level || "-"
+                                }
+                              </div>
+                              <div class="mb-2">
+                                <strong>Nama Sekolah:</strong> ${
+                                  item.Education_Name || "-"
+                                }
+                              </div>
+                              <div class="mb-2">
+                                <strong>Jurusan:</strong> ${item.Jurusan || "-"}
+                              </div>
+                              <div class="mb-2">
+                                <strong>Semester:</strong> ${
+                                  item.Semester || "-"
+                                }
+                              </div>
+                              <div class="mb-2">
+                                <strong>Akreditasi:</strong> ${
+                                  item.Accreditation || "-"
+                                }
+                              </div>
+                              <br>
+                              <hr>
+
+                              <h5 class="mt-4 mb-3">Nilai</h5>
+                              <div class="mb-2">
+                                <strong>Nilai Rata 1:</strong> ${
+                                  item.Nilai_Rata_Rata_1 || "-"
+                                }
+                              </div>
+                              <div class="mb-2">
+                                <strong>Nilai Rata 2:</strong> ${
+                                  item.Nilai_Rata_Rata_2 || "-"
+                                }
+                              </div>
+                              <div class="mb-2">
+                                <strong>Nilai Akademik:</strong> ${
+                                  item.Nilai_Akademik || "-"
+                                }
+                              </div>
+                              <div class="mb-2">
+                                <strong>Grade:</strong> ${item.Grade || "-"}
+                              </div>
+                              <div class="mb-2">
+                                <strong>Prestasi:</strong>
+                                ${
+                                  [
+                                    item.Achievement_1,
+                                    item.Achievement_2,
+                                    item.Achievement_3,
+                                  ]
+                                    .filter((a) => a && a !== "None")
+                                    .join(", ") || "Tidak ada"
+                                }
+                              </div>
+                              <div class="mb-2">
+                                <strong>Total Nilai:</strong> ${grandTotalScore}
+                              </div>
+
+                              <h5 class="mt-4 mb-3">Status</h5>
+                              <div class="mb-2">
+                              <strong>Eligible:</strong>
+                              <span class="eligible-status ${
+                                eligibleStatus === "Yes"
+                                  ? "eligible-yes"
+                                  : "eligible-no"
+                              }">
+                               ${eligibleStatus}
+                              </span>
+                               </div>
+                              <div class="mb-2">
+                                <strong>Periode:</strong> ${
+                                  item.Periode_Tahun || "-"
+                                }
+                              </div>
+                              <div class="mb-2">
+                                <strong>Diterima:</strong> ${this.formatDate(
+                                  item.Received_Application
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        `;
+
+            $("#viewModalBody").html(modalContent);
+            new bootstrap.Modal(document.getElementById("viewModal")).show();
+          },
+
+                        // Tambahkan method baru di objek app
+              previewDocument: function(documentId, fileName) {
+                const previewModal = new bootstrap.Modal(document.getElementById('previewModal'));
+                const downloadUrl = `${this.config.apiBaseUrl}/scholarship/documents/${documentId}`;
+                
+                // Set modal title
+                $('#previewModalLabel').text(`Preview: ${fileName}`);
+                
+                // Sembunyikan semua viewer terlebih dahulu
+                $('#pdf-preview').hide();
+                $('#image-preview').hide();
+                $('#unsupported-preview').hide();
+                
+             
+                
+                // Buka modal
+                previewModal.show();
+                
+                // Coba preview dokumen
+                $.ajax({
+                  url: `${this.config.apiBaseUrl}/scholarship/documents/preview/${documentId}`,
+                  method: 'GET',
+                  xhrFields: {
+                    responseType: 'blob' // Untuk menangani binary data
+                  },
+                  success: function(data, status, xhr) {
+                    const contentType = xhr.getResponseHeader('Content-Type');
+                    const file = new Blob([data], { type: contentType });
+                    const fileUrl = URL.createObjectURL(file);
+                    
+                    // Handle berdasarkan jenis file
+                    if (contentType === 'application/pdf') {
+                      $('#pdf-viewer').attr('src', fileUrl);
+                      $('#pdf-preview').show();
+                    } else if (contentType.startsWith('image/')) {
+                      $('#image-viewer').attr('src', fileUrl);
+                      $('#image-preview').show();
+                    } else {
+                      $('#unsupported-preview').show();
+                    }
+                    
+                    // Set tombol download
+                    $('.download-btn').off('click').on('click', function() {
+                      const a = document.createElement('a');
+                      a.href = downloadUrl;
+                      a.download = fileName;
+                      document.body.appendChild(a);
+                      a.click();
+                      document.body.removeChild(a);
+                    });
+                  },
+                  error: function(xhr) {
+                    $('#previewModal .modal-body').html(`
+                      <div class="preview-error">
+                        <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
+                        <h4>Gagal memuat preview dokumen</h4>
+                        <p>${xhr.responseJSON?.message || 'Terjadi kesalahan saat memuat dokumen'}</p>
+                        <button class="btn btn-primary download-btn">
+                          <i class="fas fa-download"></i> Download Dokumen
+                        </button>
+                      </div>
+                    `);
+                  }
+                });
+              },
+
+//Upload document
+handleDocumentUpload: async function(e, nik, childName) {
+  const file = e.target.files[0];
+  const docType = $(e.target).data('doc-type');
+  
+  if (!file) return;
+
+  // Validasi ukuran file (max 10MB)
+  if (file.size > 10 * 1024 * 1024) {
+    this.showError('Ukuran file maksimal 10MB');
+    $(e.target).val('');
+    return;
+  }
+
+  // Validasi tipe file
+  const allowedTypes = ['application/pdf','image/png','image/jpg'];
+  if (!allowedTypes.includes(file.type)) {
+    this.showError('Hanya file PDF yang diizinkan');
+    $(e.target).val('');
+    return;
+  }
+
+  this.showLoading(true);
+  
+  try {
+    const formData = new FormData();
+    formData.append('document', file);
+    formData.append('NIK', nik);
+    formData.append('documentType', docType);
+    if (childName) {
+      formData.append('childName', childName);
+    }
+
+    const response = await fetch(`${this.config.apiBaseUrl}/scholarship/documents`, {
+      method: 'POST',
+      body: formData
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Upload gagal');
+    }
+
+    const data = await response.json();
+    
+    // Tampilkan pesan sukses sesuai action (upload/update)
+    const actionMessage = data.action === 'updated' ? 
+      'Dokumen berhasil diperbarui' : 'Dokumen berhasil diupload';
+    this.showSuccess(actionMessage);
+    
+    // Muat ulang info dokumen
+    await this.loadDocuments(nik, childName);
+    
+    // Update status validasi di form
+    this.updateValidationStatus(docType, true);
+    
+  } catch (error) {
+    console.error('Upload error:', error);
+    this.showError(error.message);
+  } finally {
+    this.showLoading(false);
+    $(e.target).val('');
+  }
+},
+
+  
+// Modifikasi fungsi viewDocument
+viewDocument: function(e, nik, childName) {
+  const docType = $(e.target).data('doc-type');
+  
+  // Cari dokumen yang sesuai
+  const document = this.config.currentDocuments.find(doc => doc.DocumentType === docType);
+  if (document) {
+    this.previewDocument(document.DocumentID, document.FileName);
+  } else {
+    this.showError("Dokumen belum diupload");
+  }
+},
+
+
+  // Fungsi untuk memuat dokumen
+loadDocuments: async function(nik, childName) {
+  this.showLoading(true);
+  
+  try {
+    const response = await fetch(`${this.config.apiBaseUrl}/scholarship/${nik}/${childName}/documents`);
+    if (!response.ok) {
+      throw new Error('Gagal memuat dokumen');
+    }
+    
+    const documents = await response.json();
+    this.config.currentDocuments = documents;
+    
+    // Update tampilan UI untuk setiap tipe dokumen
+    const docTypes = ['beasiswa_lain', 'beasiswa_tel', 'tanggungan', 'sekolah','NilaiRapot'];
+    docTypes.forEach(docType => {
+      const doc = documents.find(d => d.DocumentType === docType);
+      if (doc) {
+        this.updateDocumentUI(doc, docType);
+      } else {
+        this.resetDocumentUI(docType);
+      }
+    });
+    
+  } catch (error) {
+    console.error('Error loading documents:', error);
+    this.showError('Gagal memuat dokumen');
+  } finally {
+    this.showLoading(false);
+  }
+},
+deleteDocument: async function(documentId, nik,childName, docType) {
+  try {
+    const result = await Swal.fire({
+      title: 'Konfirmasi Hapus Dokumen',
+      html: `
+        <p>Anda akan menghapus dokumen validasi:</p>
+        <p><strong>${this.getDocTypeName(docType)}</strong></p>
+        <p class="text-danger">Dokumen yang dihapus tidak dapat dikembalikan!</p>
+      `,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, Hapus',
+      cancelButtonText: 'Batal',
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6'
+    });
+
+    if (result.isConfirmed) {
+      this.showLoading(true);
+      
+      const response = await fetch(`${this.config.apiBaseUrl}/scholarship/documents/${documentId}/${childName}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Gagal menghapus dokumen');
+      }
+
+      const data = await response.json();
+      
+      // Update UI after successful deletion
+      $(`[data-doc-type="${docType}"]`).closest('.document-info').html(`
+        <div class="alert alert-warning">
+          <i class="fas fa-exclamation-circle"></i> Dokumen belum diupload
+        </div>
+      `);
+      
+      // Reset file input
+      $(`[data-doc-type="${docType}"]`).val('');
+      
+      // Update validation status in the form if needed
+      if (nik) {
+        this.updateValidationStatus(docType, false);
+      }
+
+      this.showSuccess('Dokumen berhasil dihapus');
+    }
+  } catch (error) {
+    console.error('Delete error:', error);
+    this.showError(error.message);
+  } finally {
+    this.showLoading(false);
+  }
+},
+
+// Helper function to get document type name
+getDocTypeName: function(docType) {
+  const types = {
+    'beasiswa_lain': 'Surat Tidak Menerima Beasiswa Lain',
+    'beasiswa_tel': 'Surat Tidak Menerima Beasiswa TEL',
+    'tanggungan': 'Surat Tanggungan Pekerja',
+    'sekolah': 'Surat Keterangan Masih Sekolah',
+    'NilaiRapot': 'Nilai Raport'
+  };
+  return types[docType] || docType;
+},
+
+// Update validation status in form
+updateValidationStatus: function(docType, isValid) {
+  const fieldMap = {
+    'beasiswa_lain': 'Tidak_Menerima_Beasiswa_Lain',
+    'beasiswa_tel': 'Tidak_Menerima_Beasiswa_TEL',
+    'tanggungan': 'Tanggungan_Pekerja',
+    'sekolah': 'Surat_Keterangan',
+     'NilaiRapot': 'Nilai Raport'
+  };
+  
+  const fieldId = fieldMap[docType];
+  if (fieldId) {
+    $(`#${fieldId}`).val(isValid ? 'Yes' : 'No');
+  }
+},
+
+  // Update tampilan dokumen di UI
+updateDocumentUI: function(document, docType) {
+  const uploadDate = new Date(document.UploadDate).toLocaleString('id-ID', {
+    timeZone: 'UTC',
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+  
+  const fileSize = this.formatFileSize(document.FileSize);
+  
+  const docInfoHtml = `
+    <div class="document-info-content">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <i class="fas ${this.getFileIcon(document.FileType)} me-2"></i>
+          <span class="document-name">${document.FileName}</span>
+          <small class="text-muted">(${fileSize})</small>
+          <div class="upload-info text-muted">
+            <small>Diupload oleh ${document.UploadedByUsername} pada ${uploadDate}</small>
+          </div>
+        </div>
+        <div class="document-actions">
+          <button class="btn btn-sm btn-outline-primary btn-preview me-2" 
+                  data-document-id="${document.DocumentID}"
+                  data-file-name="${document.FileName}">
+            <i class="fas fa-eye"></i> Preview
+          </button>
+          <button class="btn btn-sm btn-outline-danger btn-delete-document" 
+                  data-document-id="${document.DocumentID}"
+                  data-doc-type="${docType}">
+            <i class="fas fa-trash"></i> Hapus
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  $(`.document-info[data-doc-type="${docType}"]`).html(docInfoHtml);
+  
+  // Set up event handlers
+  $(`.btn-preview[data-document-id="${document.DocumentID}"]`).off('click').click(() => {
+    this.previewDocument(document.DocumentID, document.FileName);
+  });
+  
+  $(`.btn-delete-document[data-document-id="${document.DocumentID}"]`).off('click').click(() => {
+    this.deleteDocument(document.DocumentID, document.NIK, document.ChildName, docType);
+  });
+},
+
+// Reset tampilan dokumen jika tidak ada
+resetDocumentUI: function(docType) {
+  $(`[data-doc-type="${docType}"]`).closest('.document-info').html(`
+  <div class="alert alert-warning">
+    <i class="fas fa-exclamation-circle"></i> Dokumen belum diupload
+  </div>
+`);
+},
+// Helper untuk mendapatkan icon berdasarkan jenis file
+getFileIcon: function(fileType) {
+  if (fileType === 'application/pdf') return 'fa-file-pdf';
+  if (fileType.startsWith('image/')) return 'fa-file-image';
+  if (fileType.includes('word')) return 'fa-file-word';
+  if (fileType.includes('excel')) return 'fa-file-excel';
+  return 'fa-file';
+},
+
+
+
+// Helper to format file size
+formatFileSize: function(bytes) {
+  if (bytes === 0) return "0 Bytes";
+  const k = 1024;
+  const sizes = ["Bytes", "KB", "MB", "GB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  const size = (bytes / Math.pow(k, i)).toFixed(2); // angka saja
+  return size + " " + sizes[i]; // gabungkan dengan satuan
+},
+
+
+          // Open edit modal
+          openEditModal: function (item) {
+            const form = $("#editForm");
+            form.empty();
+              // Load documents when modal opens
+              this.loadDocuments(item.NIK, item.Child_Name);
+
+              // Set up document upload handlers
+              $("#editModal").find(".document-upload").off("change").on("change", (e) => 
+                this.handleDocumentUpload(e, item.NIK, item.Child_Name));
+
+              $("#editModal").find(".view-document").off("click").on("click", (e) => 
+                this.viewDocument(e, item.NIK, item.Child_Name));
+
+
+            // Create form fields for each property
+            const fields = [
+     
+              { key: "Employee_Name", label: "Employee Name", readonly: true },
+           
+            
+              {
+                key: "Child_Name",
+                label: "Child Name",
+                readonly: true,
+              },
+         
+          
+         
+              {
+                key: "Tidak_Menerima_Beasiswa_Lain",
+                label: "Tidak Menerima Beasiswa Lain",
+                type: "select",
+                options: ["Yes", "No"],
+              },
+              {
+                key: "Tidak_Menerima_Beasiswa_TEL",
+                label: "Tidak Menerima Beasiswa TEL",
+                type: "select",
+                options: ["Yes", "No"],
+              },
+              {
+                key: "Tanggungan_Pekerja",
+                label: "Tanggungan Pekerja",
+                type: "select",
+                options: ["Yes", "No"],
+              },
+              {
+                key: "Surat_Keterangan",
+                label: "Surat Keterangan Masih Sekolah",
+                type: "select",
+                options: ["Yes", "No"],
+              },
+             
+            ];
+
+            fields.forEach((field) => {
+              const group = $(`<div class="col-md-6 mb-3"></div>`);
+              const label = $(
+                `<label class="form-label">${field.label}</label>`
+              );
+              group.append(label);
+
+              let input;
+
+              if (field.type === "select") {
+                input = $(
+                  `<select class="form-control" id="${field.key}"></select>`
+                );
+                field.options.forEach((option) => {
+                  input.append(`<option value="${option}">${option}</option>`);
+                });
+                if (item[field.key]) input.val(item[field.key]);
+              } else {
+                const inputType = field.type || "text";
+                input = $(`
+                              <input type="${inputType}" class="form-control" id="${
+                  field.key
+                }"
+                                value="${item[field.key] || ""}"
+                                ${field.step ? `step="${field.step}"` : ""}
+                                ${field.min ? `min="${field.min}"` : ""}
+                                ${field.max ? `max="${field.max}"` : ""}
+                              />
+                            `);
+              }
+
+              if (field.readonly) {
+                input.prop("readonly", true).addClass("bg-light");
+              }
+
+              group.append(input);
+              form.append(group);
+            });
+
+          
+            // Store the original item for reference
+            form.data("originalItem", item);
+
+            // Show the modal
+            new bootstrap.Modal(document.getElementById("editModal")).show();
+          },
+
+
+
+
+          
+          // Save changes from edit modal
+          saveChanges: function () {
+            const form = $("#editForm");
+            const originalItem = form.data("originalItem");
+            const updatedData = { ...originalItem };
+
+            // Collect all form values
+            form.find("input, select").each(function () {
+              updatedData[this.id] = $(this).val();
+            });
+
+            
+
+            this.showLoading(true);
+
+            // Send update to server
+            $.ajax({
+              url: `${this.config.apiBaseUrl}/scholarship/${updatedData.NIK}/${updatedData.Child_Name}`,
+              method: "PUT",
+              contentType: "application/json",
+              data: JSON.stringify(updatedData),
+            })
+              .then(() => {
+                this.showSuccess("Data berhasil diperbarui");
+                this.loadData(); // Refresh data from server
+                bootstrap.Modal.getInstance(
+                  document.getElementById("editModal")
+                ).hide();
+              })
+              .catch((error) => {
+                console.error("Error updating data:", error);
+                this.showError("Gagal memperbarui data");
+              })
+              .always(() => {
+                this.showLoading(false);
+              });
+          },
+
+          
+
+         
+
+          // Helper functions
+          formatDate: function (isoString) {
+            if (!isoString) return "";
+            const date = new Date(isoString);
+            const day = String(date.getDate()).padStart(2, "0");
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const year = date.getFullYear();
+            return `${day}-${month}-${year}`;
+          },
+
+          getColumnIndex: function (columnName) {
+            const columns = [
+              "No",
+              "NIK",
+              "Employee_Name",
+              "Phone_Number",
+              "Join_Date",
+              "Org_Group_Code",
+              "Organization_Name",
+              "Grade",
+              "Employee_PA",
+              "Child_Name",
+              "Child_Phone_Number",
+              "Gender",
+              "Birth_Place",
+              "Birth_Date",
+              "Age",
+              "Education_Level",
+              "Education_Name",
+              "Jurusan",
+              "Semester",
+              "Accreditation",
+              "Nilai_Rata_Rata_1",
+              "Nilai_Rata_Rata_2",
+              "Nilai_Akademik",
+
+              "Achievement_1",
+              "Achievement_2",
+              "Achievement_3",
+              "Remark",
+              "Grand_Total_Score",
+              "Tidak_Menerima_Beasiswa_Lain",
+              "Tidak_Menerima_Beasiswa_TEL",
+              "Tanggungan_Pekerja",
+              "Surat_Keterangan",
+              "Received_Application",
+              "Periode_Tahun",
+              "Eligible",
+            ];
+            return columns.indexOf(columnName) + 1;
+          },
+        };
+
+        // Initialize the application
+        app.init();
+      });
+
+      const table = document.getElementById("dataTable");
+  let selectedRow = null;
+
+  table.addEventListener("click", function(event) {
+    let target = event.target;
+
+    // Cari elemen TR terdekat
+    let row = target.closest("tr");
+    // Abaikan header (baris pertama)
+    if (row && row.rowIndex !== 0) {
+      if (selectedRow) {
+        selectedRow.classList.remove("selected");
+      }
+
+      if (row !== selectedRow) {
+        row.classList.add("selected");
+        selectedRow = row;
+      } else {
+        selectedRow = null; // toggle off
+      }
+    }
+  });
+
+  // Klik di luar tabel untuk menghapus highlight
+  document.addEventListener("click", function(event) {
+    if (!table.contains(event.target)) {
+      if (selectedRow) {
+        selectedRow.classList.remove("selected");
+        selectedRow = null;
+      }
+    }
+  });
+    </script>
+    <script type="module">
+      import { protectPage } from "./auth.js";
+      import { logout } from "./auth.js";
+      document.addEventListener("DOMContentLoaded", async () => {
+        const auth = await protectPage();
+        if (auth.authenticated) {
+          // User is authenticated, you can access auth.user
+          console.log("User:", auth.user);
+
+          document
+            .getElementById("logoutButton")
+            .addEventListener("click", async (e) => {
+              e.preventDefault();
+              await logout();
+            });
+        }
+      });
+    </script>
+  </body>
+</html>
