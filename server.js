@@ -227,8 +227,138 @@ async function createTables() {
       );
       console.log("✅ Admin password reset to admin123");
     }
+
+    // Seed dummy data if tables are empty
+    await seedDummyData();
   } catch (err) {
     console.error("❌ Error creating tables:", err);
+  }
+}
+
+async function seedDummyData() {
+  try {
+    // Check if data already exists
+    const [existingEmployees] = await pool.query("SELECT COUNT(*) as count FROM EmployeeTEL");
+    if (existingEmployees[0].count > 0) {
+      console.log("📊 Data already exists, skipping seed");
+      return;
+    }
+
+    console.log("🌱 Seeding dummy data...");
+
+    // Insert dummy employees
+    const employees = [
+      ['EMP001', 'Budi Santoso', '081234567890', '2020-01-15', 'IT-001', 'IT Department', 'PA-001'],
+      ['EMP002', 'Siti Rahayu', '081234567891', '2019-03-20', 'HR-001', 'HR Department', 'PA-002'],
+      ['EMP003', 'Ahmad Hidayat', '081234567892', '2018-07-10', 'FIN-001', 'Finance Department', 'PA-003'],
+      ['EMP004', 'Dewi Lestari', '081234567893', '2021-02-28', 'MKT-001', 'Marketing Department', 'PA-004'],
+      ['EMP005', 'Rudi Hartono', '081234567894', '2017-11-05', 'OPS-001', 'Operations Department', 'PA-005'],
+    ];
+
+    for (const emp of employees) {
+      await pool.query(
+        `INSERT INTO EmployeeTEL (NIK, Employee_Name, Phone_Number, Join_Date, Org_Group_Code, Organization_Name, Employee_PA)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        emp
+      );
+    }
+
+    // Insert dummy children
+    const children = [
+      ['EMP001', 1, 'Andi Santoso', 'L', 'Jakarta', '2005-05-15'],
+      ['EMP001', 2, 'Ani Santoso', 'P', 'Jakarta', '2008-08-20'],
+      ['EMP002', 1, 'Dian Rahayu', 'P', 'Bandung', '2006-03-10'],
+      ['EMP003', 1, 'Fajar Hidayat', 'L', 'Surabaya', '2004-12-25'],
+      ['EMP003', 2, 'Fitri Hidayat', 'P', 'Surabaya', '2007-06-30'],
+      ['EMP004', 1, 'Galih Lestari', 'L', 'Yogyakarta', '2005-09-18'],
+      ['EMP005', 1, 'Hana Hartono', 'P', 'Semarang', '2006-01-22'],
+    ];
+
+    for (const child of children) {
+      await pool.query(
+        `INSERT INTO ChildTEL (NIK, Child_No, Child_Name, Gender, Birth_Place, Birth_Date)
+         VALUES (?, ?, ?, ?, ?, ?)`,
+        child
+      );
+    }
+
+    // Insert dummy universities
+    const universities = [
+      ['Universitas Indonesia', 'A'],
+      ['Institut Teknologi Bandung', 'A'],
+      ['Universitas Gadjah Mada', 'A'],
+      ['Universitas Airlangga', 'A'],
+      ['Universitas Diponegoro', 'B'],
+      ['Universitas Brawijaya', 'A'],
+      ['Universitas Padjadjaran', 'A'],
+      ['Institut Pertanian Bogor', 'A'],
+      ['Universitas Sebelas Maret', 'B'],
+      ['Universitas Hasanuddin', 'A'],
+    ];
+
+    for (const uni of universities) {
+      await pool.query(
+        `INSERT INTO UniversitasList (nama_universitas, akreditasi) VALUES (?, ?)`,
+        uni
+      );
+    }
+
+    // Insert dummy scholarship applicants
+    const applicants = [
+      ['EMP001', 'Budi Santoso', '081234567890', '2020-01-15', 'IT-001', 'IT Department', 'PA-001',
+        'Andi Santoso', '082111222333', 'L', 'Jakarta', '2005-05-15', 19, 'S1',
+        'Universitas Indonesia', 'Teknik Informatika', 3, 'A', 85.5, 87.0, 86.25, 'A',
+        'Juara 1 Olimpiade Matematika', null, null, null, 'Siswa berprestasi', 92.5,
+        'Ya', 'Ya', 'Ya', 'Ya', '2025-01-10', 'Lengkap', '2025'],
+      ['EMP002', 'Siti Rahayu', '081234567891', '2019-03-20', 'HR-001', 'HR Department', 'PA-002',
+        'Dian Rahayu', '082111222334', 'P', 'Bandung', '2006-03-10', 18, 'S1',
+        'Institut Teknologi Bandung', 'Arsitektur', 3, 'A', 88.0, 89.5, 88.75, 'A',
+        'Juara 2 Lomba Desain Nasional', 'Finalis LKTI', null, null, 'Mahasiswi aktif organisasi', 95.0,
+        'Ya', 'Ya', 'Ya', 'Ya', '2025-01-12', 'Lengkap', '2025'],
+      ['EMP003', 'Ahmad Hidayat', '081234567892', '2018-07-10', 'FIN-001', 'Finance Department', 'PA-003',
+        'Fajar Hidayat', '082111222335', 'L', 'Surabaya', '2004-12-25', 20, 'S1',
+        'Universitas Airlangga', 'Kedokteran', 5, 'A', 90.0, 91.5, 90.75, 'A',
+        null, null, null, null, 'Fokus akademik', 88.0,
+        'Ya', 'Ya', 'Ya', 'Ya', '2025-01-08', 'Lengkap', '2025'],
+    ];
+
+    for (const app of applicants) {
+      await pool.query(
+        `INSERT INTO ScholarshipApplicants (
+          NIK, Employee_Name, Phone_Number, Join_Date, Org_Group_Code, Organization_Name, Employee_PA,
+          Child_Name, Child_Phone_Number, Gender, Birth_Place, Birth_Date, Age, Education_Level,
+          Education_Name, Jurusan, Semester, Accreditation, Nilai_Rata_Rata_1, Nilai_Rata_Rata_2,
+          Nilai_Akademik, Grade, Achievement_1, Achievement_2, Achievement_3, Achievement_4, Remark,
+          Grand_Total_Score, Tidak_Menerima_Beasiswa_Lain, Tidak_Menerima_Beasiswa_TEL,
+          Tanggungan_Pekerja, Surat_Keterangan, Received_Application, Berkas, Periode_Tahun
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        app
+      );
+    }
+
+    // Insert parameter penilaian
+    const parameters = [
+      ['Accreditation', 'A', 30],
+      ['Accreditation', 'B', 20],
+      ['Accreditation', 'C', 10],
+      ['Grade', 'A', 40],
+      ['Grade', 'B', 30],
+      ['Grade', 'C', 20],
+      ['Achievement', 'Internasional', 30],
+      ['Achievement', 'Nasional', 20],
+      ['Achievement', 'Provinsi', 15],
+    ];
+
+    for (const param of parameters) {
+      await pool.query(
+        `INSERT IGNORE INTO ParameterPenilaian (kategori, key_nilai, value_nilai) VALUES (?, ?, ?)`,
+        param
+      );
+    }
+
+    console.log("✅ Dummy data seeded successfully!");
+  } catch (err) {
+    console.error("❌ Error seeding dummy data:", err);
   }
 }
 
