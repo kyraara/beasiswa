@@ -205,14 +205,27 @@ async function createTables() {
     }
     console.log("✅ All tables ready");
 
-    // Create default admin if not exists
+    // Create or reset default admin
     const [existingAdmin] = await pool.query("SELECT id FROM Users WHERE username = 'admin'");
+
+    // Hash password dynamically
+    const adminPassword = "admin123";
+    const hashedPassword = await bcrypt.hash(adminPassword, 10);
+
     if (existingAdmin.length === 0) {
       await pool.query(
         `INSERT INTO Users (username, password_hash, full_name, role, is_active)
-         VALUES ('admin', '$2a$10$rOvHPxfzO2.NFxqVx0CZnOiGhUh8NQOmN8KvJYsMnhqZbJZLQZI6e', 'Administrator', 'admin', 1)`
+         VALUES ('admin', ?, 'Administrator', 'admin', 1)`,
+        [hashedPassword]
       );
       console.log("✅ Default admin user created (admin/admin123)");
+    } else {
+      // Update existing admin password to ensure it works
+      await pool.query(
+        `UPDATE Users SET password_hash = ? WHERE username = 'admin'`,
+        [hashedPassword]
+      );
+      console.log("✅ Admin password reset to admin123");
     }
   } catch (err) {
     console.error("❌ Error creating tables:", err);
